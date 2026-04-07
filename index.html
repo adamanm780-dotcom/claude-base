@@ -1051,36 +1051,22 @@
     .skip-link:focus { top: 0; }
 
     /* ══════════════════════════════════════════════════════════
-       HERO FLOATING BALLS — pre-animation idle state
+       HERO FLOATING BALLS — img-based, GSAP-driven
     ══════════════════════════════════════════════════════════ */
     #hero-balls-container {
       position: absolute;
       inset: 0;
       pointer-events: none;
-      z-index: 5;
+      z-index: 6;
       overflow: visible;
     }
     .hero-float-ball {
       position: absolute;
-      left: 0;
-      top: 0;
-      border-radius: 50%;
-      background: radial-gradient(circle at 32% 28%,
-        rgba(219,234,254,0.96) 0%,
-        rgba(147,197,253,0.92) 14%,
-        rgba(74, 120,240,0.96) 44%,
-        rgba(26, 56, 153,1.00) 71%,
-        rgba(10, 28,  90,1.00) 100%
-      );
-      box-shadow:
-        0 0 10px  rgba(74,120,240,0.85),
-        0 0 24px  rgba(74,120,240,0.50),
-        0 0 52px  rgba(40, 85,204,0.28),
-        inset 0 1px 2px rgba(255,255,255,0.42),
-        inset 0 -1px 3px rgba(10,28,90,0.55);
-      will-change: transform, opacity;
+      display: block;
+      will-change: transform;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
+      /* No opacity tricks — balls are visible from load */
     }
 
   </style>
@@ -1184,8 +1170,18 @@
           <div class="loading-ring"></div>
         </div>
 
-        <!-- Floating balls: visible before scroll, smoothly merge into ring animation -->
-        <div id="hero-balls-container" aria-hidden="true"></div>
+        <!-- Floating balls: img elements, visible on load, GSAP-merged into ring -->
+        <div id="hero-balls-container" aria-hidden="true">
+          <img class="hero-float-ball" src="downloads/ball.png" alt="" draggable="false" />
+          <img class="hero-float-ball" src="downloads/ball.png" alt="" draggable="false" />
+          <img class="hero-float-ball" src="downloads/ball.png" alt="" draggable="false" />
+          <img class="hero-float-ball" src="downloads/ball.png" alt="" draggable="false" />
+          <img class="hero-float-ball" src="downloads/ball.png" alt="" draggable="false" />
+          <img class="hero-float-ball" src="downloads/ball.png" alt="" draggable="false" />
+          <img class="hero-float-ball" src="downloads/ball.png" alt="" draggable="false" />
+          <img class="hero-float-ball" src="downloads/ball.png" alt="" draggable="false" />
+          <img class="hero-float-ball" src="downloads/ball.png" alt="" draggable="false" />
+        </div>
 
       </div>
     </section>
@@ -1523,6 +1519,10 @@
     </div>
   </footer>
 
+  <!-- GSAP + ScrollTrigger (required for ball animation) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
   <!-- ═══════════════════════════════════════
        JAVASCRIPT
   ══════════════════════════════════════════ -->
@@ -1691,198 +1691,234 @@
     })();
 
     /* ══════════════════════════════════════
-       3. HERO FLOATING BALLS — idle float → scroll-merge into ring
+       3. HERO FLOATING BALLS — GSAP + ScrollTrigger
+          9 <img> elements, visible on load, merged into ring on scroll
     ═══════════════════════════════════════ */
     (function initHeroBalls() {
       'use strict';
 
-      // ── Config ──────────────────────────────────────────────────
-      var BALL_COUNT       = 9;
-      var BALL_SIZE_CANVAS = 50;    // ball diameter in canvas px (900×672 space)
+      // ── Tuneable constants ───────────────────────────────────────
+      // Ring geometry in canvas coordinates (900 × 672 internal space).
+      // RING_CX/CY = estimated centre of the ring in the animation frames.
+      // RING_R     = estimated radius of the ball-orbit in canvas px.
+      // Adjust after comparing against your actual frames.
+      var RING_CX          = 450;
+      var RING_CY          = 310;
+      var RING_R           = 205;
+      var BALL_SIZE_CANVAS = 50;   // ball img diameter in canvas px
 
-      // Ring geometry in canvas coordinates (900 × 672)
-      // Adjust RING_CX / RING_CY / RING_R if the ring center differs in your frames
-      var RING_CX = 450;
-      var RING_CY = 310;
-      var RING_R  = 205;
+      // Scroll range (fraction 0–1 of the 500vh hero section)
+      var SCROLL_START = 0.03;   // balls begin moving
+      var SCROLL_END   = 0.26;   // balls have fully merged into canvas
 
-      // Scroll progress thresholds (0–1 over the 500vh hero range)
-      var T_MOVE = 0.04;   // balls start moving toward ring
-      var T_END  = 0.27;   // balls fully invisible / merged into canvas
-      var T_FADE = 0.68;   // fraction of T_MOVE→T_END at which opacity fade begins
-
-      // Home positions: [oxFraction, oyFraction] relative to viewport center
-      // Organic spread — keeps balls clear of hero text (left side desktop)
-      var HOME_OFFSETS = [
+      // Home positions: [ox, oy] as fraction of viewport, offset from centre.
+      // Spread organically — weighted toward the right (canvas) side.
+      var HOME = [
         [-0.30, -0.22],
         [-0.06, -0.30],
         [ 0.19, -0.24],
-        [-0.37,  0.04],
-        [ 0.32, -0.04],
+        [-0.36,  0.04],
+        [ 0.31, -0.04],
         [-0.24,  0.22],
-        [ 0.06,  0.29],
+        [ 0.07,  0.29],
         [ 0.25,  0.18],
         [-0.11,  0.10]
       ];
 
-      // Idle float params: amplitude (px), frequency (rad/s), phase (rad)
-      var FLOAT = [
-        { ax:  9, ay: 13, fx: 0.40, fy: 0.31, ph: 0.00 },
-        { ax: 11, ay:  8, fx: 0.33, fy: 0.52, ph: 1.10 },
-        { ax:  6, ay: 14, fx: 0.51, fy: 0.39, ph: 2.30 },
-        { ax: 13, ay:  7, fx: 0.28, fy: 0.29, ph: 0.70 },
-        { ax:  8, ay: 11, fx: 0.44, fy: 0.61, ph: 1.80 },
-        { ax: 10, ay:  9, fx: 0.59, fy: 0.33, ph: 3.10 },
-        { ax:  7, ay: 12, fx: 0.47, fy: 0.42, ph: 2.00 },
-        { ax:  9, ay:  7, fx: 0.31, fy: 0.50, ph: 0.40 },
-        { ax: 12, ay: 10, fx: 0.41, fy: 0.27, ph: 1.50 }
+      // Per-ball idle float: amplitude px, frequency Hz, phase offset rad
+      var FLOATS = [
+        { ax:  9, ay: 13, fx: 0.07, fy: 0.05, ph: 0.00 },
+        { ax: 11, ay:  8, fx: 0.06, fy: 0.09, ph: 1.10 },
+        { ax:  6, ay: 14, fx: 0.09, fy: 0.07, ph: 2.30 },
+        { ax: 13, ay:  7, fx: 0.05, fy: 0.05, ph: 0.70 },
+        { ax:  8, ay: 11, fx: 0.08, fy: 0.11, ph: 1.80 },
+        { ax: 10, ay:  9, fx: 0.10, fy: 0.06, ph: 3.10 },
+        { ax:  7, ay: 12, fx: 0.08, fy: 0.07, ph: 2.00 },
+        { ax:  9, ay:  7, fx: 0.05, fy: 0.09, ph: 0.40 },
+        { ax: 12, ay: 10, fx: 0.07, fy: 0.05, ph: 1.50 }
       ];
 
-      // ── DOM ──────────────────────────────────────────────────────
+      // ── DOM refs ────────────────────────────────────────────────
       var heroScroll = document.getElementById('hero-scroll');
       var canvas     = document.getElementById('hero-canvas');
       var loading    = document.getElementById('hero-loading');
-      var container  = document.getElementById('hero-balls-container');
+      var balls      = Array.from(
+                         document.querySelectorAll('#hero-balls-container .hero-float-ball')
+                       );
 
-      var ballEls = [];
-      for (var k = 0; k < BALL_COUNT; k++) {
-        var el = document.createElement('div');
-        el.className = 'hero-float-ball';
-        container.appendChild(el);
-        ballEls.push(el);
+      if (balls.length !== 9) { console.warn('Expected 9 balls, got', balls.length); return; }
+
+      // ── Geometry helpers ────────────────────────────────────────
+      function ballSizePx() {
+        var rect = canvas.getBoundingClientRect();
+        return Math.max(20, Math.round(BALL_SIZE_CANVAS * rect.height / 672));
       }
 
-      // ── State ────────────────────────────────────────────────────
-      var isLoaded    = false;
-      var startTime   = null;
-      var scrollP     = 0;
-      var ballSizePx  = 40;
-      var homePos     = [];   // screen-px centers, recomputed on resize
-      var targetPos   = [];   // screen-px centers, computed from canvas rect
-      var targetReady = false;
-
-      // ── Helpers ──────────────────────────────────────────────────
-      function easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      }
-
-      function computeHomePos() {
-        var vw = window.innerWidth;
-        var vh = window.innerHeight;
-        homePos = HOME_OFFSETS.map(function(o) {
+      function homeCenters() {
+        var vw = window.innerWidth, vh = window.innerHeight;
+        return HOME.map(function(o) {
           return { x: vw * 0.5 + o[0] * vw, y: vh * 0.5 + o[1] * vh };
         });
       }
 
-      function computeTargetPos() {
+      function targetCenters() {
         var rect   = canvas.getBoundingClientRect();
         var scaleX = rect.width  / 900;
         var scaleY = rect.height / 672;
-        targetPos  = [];
-        for (var i = 0; i < BALL_COUNT; i++) {
-          var angle = (i / BALL_COUNT) * Math.PI * 2 - Math.PI / 2;
-          targetPos.push({
+        return balls.map(function(_, i) {
+          var angle = (i / 9) * Math.PI * 2 - Math.PI / 2;
+          return {
             x: rect.left + (RING_CX + Math.cos(angle) * RING_R) * scaleX,
             y: rect.top  + (RING_CY + Math.sin(angle) * RING_R) * scaleY
+          };
+        });
+      }
+
+      // ── Size & initial placement (set before first paint) ───────
+      function applySize() {
+        var s = ballSizePx() + 'px';
+        balls.forEach(function(b) { b.style.width = s; b.style.height = s; });
+      }
+
+      function placeAtHome() {
+        var sz  = ballSizePx();
+        var hs  = sz * 0.5;
+        homeCenters().forEach(function(c, i) {
+          gsap.set(balls[i], { x: c.x - hs, y: c.y - hs });
+        });
+      }
+
+      applySize();
+      placeAtHome();
+
+      // ── Idle float tweens (killed on first scroll) ───────────────
+      var idleTweens = [];
+
+      function startIdleFloat() {
+        var sz = ballSizePx();
+        var hs = sz * 0.5;
+        var homes = homeCenters();
+
+        balls.forEach(function(ball, i) {
+          var f  = FLOATS[i];
+          var hx = homes[i].x - hs;
+          var hy = homes[i].y - hs;
+
+          // X drift
+          var tx = gsap.to(ball, {
+            x: hx + f.ax,
+            duration: 1 / f.fx,
+            yoyo: true,
+            repeat: -1,
+            ease: 'sine.inOut',
+            delay: f.ph * 0.16
           });
+          // Y drift — independent frequency
+          var ty = gsap.to(ball, {
+            y: hy + f.ay,
+            duration: 1 / f.fy,
+            yoyo: true,
+            repeat: -1,
+            ease: 'sine.inOut',
+            delay: f.ph * 0.11
+          });
+          idleTweens.push(tx, ty);
+        });
+      }
+
+      function killIdleFloat() {
+        idleTweens.forEach(function(t) { t.kill(); });
+        idleTweens.length = 0;
+      }
+
+      // ── ScrollTrigger merge animation ───────────────────────────
+      function buildScrollAnim() {
+        if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+          console.warn('GSAP / ScrollTrigger not loaded');
+          return;
         }
-        targetReady = true;
-      }
+        gsap.registerPlugin(ScrollTrigger);
 
-      function updateBallSize() {
-        var rect   = canvas.getBoundingClientRect();
-        var scaleY = rect.height / 672;
-        ballSizePx = Math.max(20, Math.round(BALL_SIZE_CANVAS * scaleY));
-        var s = ballSizePx + 'px';
-        ballEls.forEach(function(b) { b.style.width = s; b.style.height = s; });
-      }
+        var sz      = ballSizePx();
+        var hs      = sz * 0.5;
+        var targets = targetCenters();
+        var homes   = homeCenters();
+        var killed  = false;
 
-      function getScrollP() {
-        var rect    = heroScroll.getBoundingClientRect();
-        var total   = heroScroll.offsetHeight - window.innerHeight;
-        return Math.min(Math.max(-rect.top / total, 0), 1);
-      }
+        balls.forEach(function(ball, i) {
+          var tx = targets[i].x - hs;
+          var ty = targets[i].y - hs;
 
-      // ── Main RAF loop (GPU: only transform + opacity change) ─────
-      function tick(ts) {
-        if (!startTime) startTime = ts;
-        var t    = (ts - startTime) * 0.001;   // elapsed seconds
-        var p    = scrollP;
-        var tRaw = (p - T_MOVE) / (T_END - T_MOVE);
-        var tCl  = Math.min(Math.max(tRaw, 0), 1);
-        var ease = easeInOutCubic(tCl);
-        var fAmp = 1 - ease;                   // float amplitude shrinks to 0 at merge
+          ScrollTrigger.create({
+            trigger: heroScroll,
+            start:   'top top',
+            end:     'bottom bottom',
+            scrub:   true,
+            onUpdate: function(self) {
+              var p = self.progress;
 
-        if (tCl > 0 && !targetReady) computeTargetPos();
+              // Kill idle animation the first time scroll begins
+              if (!killed && p > 0.001) {
+                killed = true;
+                killIdleFloat();
+                // Snap x/y from GSAP internal to explicit values so
+                // ScrollTrigger takes over without a jump
+                var cur = gsap.getProperty(ball, 'x');
+                var cuy = gsap.getProperty(ball, 'y');
+                gsap.set(ball, { x: cur, y: cuy });
+              }
 
-        var hs = ballSizePx * 0.5;
+              // Map scroll progress to transition range
+              var t = Math.min(Math.max((p - SCROLL_START) / (SCROLL_END - SCROLL_START), 0), 1);
+              if (t <= 0) return;
 
-        for (var i = 0; i < BALL_COUNT; i++) {
-          if (!homePos[i]) continue;
+              var ease = gsap.parseEase('power3.inOut')(t);
+              var hx   = homes[i].x - hs;
+              var hy   = homes[i].y - hs;
 
-          var f   = FLOAT[i];
-          var fdx = f.ax * Math.sin(f.fx * t + f.ph)       * fAmp;
-          var fdy = f.ay * Math.cos(f.fy * t + f.ph * 0.7) * fAmp;
-
-          // Interpolated center position
-          var cx, cy;
-          if (!targetReady || tCl <= 0) {
-            cx = homePos[i].x;
-            cy = homePos[i].y;
-          } else if (tCl >= 1) {
-            cx = targetPos[i].x;
-            cy = targetPos[i].y;
-          } else {
-            cx = homePos[i].x + (targetPos[i].x - homePos[i].x) * ease;
-            cy = homePos[i].y + (targetPos[i].y - homePos[i].y) * ease;
-          }
-
-          // Single transform — compositor-only, no layout
-          ballEls[i].style.transform =
-            'translate(' + (cx - hs + fdx) + 'px,' + (cy - hs + fdy) + 'px)';
-
-          // Opacity: hidden until canvas loads; fades out as balls merge
-          var opacity = 0;
-          if (isLoaded) {
-            if (tCl >= 1) {
-              opacity = 0;
-            } else if (tCl > T_FADE) {
-              opacity = 1 - (tCl - T_FADE) / (1 - T_FADE);
-            } else {
-              opacity = 1;
+              gsap.set(ball, {
+                x:       hx + (tx - hx) * ease,
+                y:       hy + (ty - hy) * ease,
+                // Ball is fully hidden only after it has landed (t >= 1)
+                // No fade during travel — opacity stays 1 throughout
+                opacity: t >= 1 ? 0 : 1
+              });
             }
-          }
-          ballEls[i].style.opacity = opacity;
-        }
-
-        requestAnimationFrame(tick);
+          });
+        });
       }
 
-      // ── Startup ──────────────────────────────────────────────────
-      computeHomePos();
-      updateBallSize();
-      requestAnimationFrame(tick);
+      // ── Boot sequence ────────────────────────────────────────────
+      // Wait for canvas frame-1 to load (loading overlay hides),
+      // then start float + scroll system.
+      function boot() {
+        startIdleFloat();
+        buildScrollAnim();
+      }
 
-      // Reveal balls the moment the canvas loading overlay hides
-      var loadObs = new MutationObserver(function() {
-        if (loading.classList.contains('is-hidden')) {
-          loadObs.disconnect();
-          isLoaded = true;
-        }
-      });
-      loadObs.observe(loading, { attributes: true, attributeFilter: ['class'] });
+      if (loading.classList.contains('is-hidden')) {
+        boot();
+      } else {
+        var obs = new MutationObserver(function() {
+          if (loading.classList.contains('is-hidden')) {
+            obs.disconnect();
+            boot();
+          }
+        });
+        obs.observe(loading, { attributes: true, attributeFilter: ['class'] });
+      }
 
-      // ── Event listeners ──────────────────────────────────────────
-      window.addEventListener('scroll', function() {
-        scrollP = getScrollP();
-        if (scrollP >= T_MOVE && !targetReady) computeTargetPos();
-      }, { passive: true });
-
+      // ── Resize: recalculate size + home positions ─────────────────
       window.addEventListener('resize', function() {
-        computeHomePos();
-        updateBallSize();
-        targetReady = false;
-        if (scrollP >= T_MOVE) computeTargetPos();
+        applySize();
+        if (idleTweens.length) {
+          // Rebuild idle tweens with updated geometry
+          killIdleFloat();
+          placeAtHome();
+          startIdleFloat();
+        }
+        // ScrollTrigger.refresh() will re-run onUpdate with current progress
+        if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
       });
 
     })(); // end initHeroBalls
