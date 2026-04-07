@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Achim Weidmann · Juwelier Wiesbaden</title>
+  <meta name="description" content="Achim Weidmann – Ihr Juwelier in Wiesbaden. Handgefertigter Schmuck, edle Uhren, Trauringe und persönliche Beratung auf höchstem Niveau." />
+  <meta name="theme-color" content="#050810" />
+
+  <!-- Preload first animation frame -->
+  <link rel="preload" href="frames-web/frame-001.webp" as="image" type="image/webp" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ══════════════════════════════════════════════════════════
+       DESIGN TOKENS
+    ══════════════════════════════════════════════════════════ */
+    :root {
+      /* Backgrounds — deep dark sapphire world */
+      --void:       #050810;
+      --deep:       #07091a;
+      --surface-1:  #0c1220;
+      --surface-2:  #111928;
+      --surface-3:  #172133;
+
+      /* Sapphire spectrum */
+      --s900: #0a1c5a;
+      --s700: #1a3899;
+      --s500: #2855cc;
+      --s400: #4a78f0;
+      --s300: #6b9fff;
+      --s200: #93c5fd;
+      --s100: #dbeafe;
+
+      /* Platinum / silver accents */
+      --platin:  #e8edf5;
+      --silver:  #94a3b8;
+      --silver2: #6878a0;
+
+      /* Typography */
+      --text:    #eef2ff;
+      --text2:   #aab5cc;
+      --text3:   #5f6e8a;
+
+      /* Borders */
+      --bd-s:  rgba(74, 120, 240, 0.18);
+      --bd-p:  rgba(203, 213, 225, 0.10);
+      --bd-w:  rgba(203, 213, 225, 0.20);
+
+      /* Glow effects */
+      --glow-sm:  0 0 40px rgba(74, 120, 240, 0.20);
+      --glow-md:  0 0 70px rgba(74, 120, 240, 0.28);
+      --glow-lg:  0 0 120px rgba(74, 120, 240, 0.38);
+
+      /* Fonts */
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans:  'DM Sans', system-ui, sans-serif;
+
+      /* Layout */
+      --nav-h:    76px;
+      --pad-x:    clamp(24px, 6vw, 80px);
+      --pad-sec:  clamp(80px, 11vw, 130px);
+      --max-w:    1320px;
+      --radius:   4px;
+      --radius-lg: 12px;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       RESET
+    ══════════════════════════════════════════════════════════ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--sans);
+      color: var(--text);
+      background: var(--deep);
+      overflow-x: hidden;
+      line-height: 1.65;
+      font-weight: 300;
+    }
+    img  { display: block; max-width: 100%; }
+    a    { color: inherit; text-decoration: none; cursor: pointer; }
+    button { cursor: pointer; font-family: var(--sans); border: none; background: none; }
+
+    /* ══════════════════════════════════════════════════════════
+       TYPOGRAPHY SYSTEM
+    ══════════════════════════════════════════════════════════ */
+    .display-hero {
+      font-family: var(--serif);
+      font-size: clamp(56px, 9vw, 110px);
+      font-weight: 300;
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .display-hero em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--s200);
+    }
+    .display-section {
+      font-family: var(--serif);
+      font-size: clamp(38px, 5.5vw, 68px);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+    .display-section em {
+      font-style: italic;
+      color: var(--s300);
+    }
+    .display-sub {
+      font-family: var(--serif);
+      font-size: clamp(26px, 3.5vw, 44px);
+      font-weight: 400;
+      line-height: 1.2;
+    }
+    .overline {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--s300);
+      display: block;
+    }
+    .body-text {
+      font-size: clamp(15px, 1.8vw, 17px);
+      line-height: 1.75;
+      color: var(--text2);
+      font-weight: 300;
+    }
+    .body-text--large {
+      font-size: clamp(17px, 2.2vw, 20px);
+      line-height: 1.8;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       BUTTONS
+    ══════════════════════════════════════════════════════════ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: all 0.35s cubic-bezier(0.25, 0, 0, 1);
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.05);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .btn:hover::after { opacity: 1; }
+
+    .btn--primary {
+      background: linear-gradient(135deg, var(--s500) 0%, var(--s400) 100%);
+      color: white;
+      box-shadow: 0 4px 24px rgba(40, 85, 204, 0.4),
+                  inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    .btn--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 36px rgba(40, 85, 204, 0.55),
+                  inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    .btn--ghost {
+      background: transparent;
+      color: var(--platin);
+      border: 1px solid var(--bd-w);
+    }
+    .btn--ghost:hover {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(203, 213, 225, 0.40);
+      transform: translateY(-2px);
+    }
+    .btn--outline-sapphire {
+      background: transparent;
+      color: var(--s300);
+      border: 1px solid var(--bd-s);
+    }
+    .btn--outline-sapphire:hover {
+      background: rgba(74, 120, 240, 0.08);
+      border-color: var(--s400);
+      transform: translateY(-2px);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       NAVIGATION
+    ══════════════════════════════════════════════════════════ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 500;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--pad-x);
+      transition: background 0.5s ease, backdrop-filter 0.5s ease, box-shadow 0.5s ease;
+    }
+    .nav--scrolled {
+      background: rgba(7, 9, 26, 0.85);
+      backdrop-filter: blur(20px) saturate(1.5);
+      -webkit-backdrop-filter: blur(20px) saturate(1.5);
+      box-shadow: 0 1px 0 var(--bd-s), 0 4px 40px rgba(0,0,0,0.5);
+    }
+    .nav__brand {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: var(--platin);
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+    .nav__brand-sub {
+      font-family: var(--sans);
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--s300);
+      margin-top: 3px;
+    }
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav__links a {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text2);
+      position: relative;
+      padding-bottom: 3px;
+      transition: color 0.25s;
+    }
+    .nav__links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--s400);
+      transition: width 0.3s cubic-bezier(0.25, 0, 0, 1);
+    }
+    .nav__links a:hover { color: var(--platin); }
+    .nav__links a:hover::after { width: 100%; }
+
+    .nav__cta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav__phone {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--text2);
+      transition: color 0.25s;
+    }
+    .nav__phone:hover { color: var(--platin); }
+
+    .nav__menu-toggle {
+      display: none;
+      width: 40px; height: 40px;
+      align-items: center; justify-content: center;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .nav__menu-toggle span {
+      display: block;
+      width: 22px; height: 1px;
+      background: var(--platin);
+      transition: all 0.3s;
+    }
+
+    /* Mobile nav */
+    .nav__mobile {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 16, 0.97);
+      backdrop-filter: blur(24px);
+      z-index: 490;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+    }
+    .nav__mobile.is-open { display: flex; }
+    .nav__mobile a {
+      font-family: var(--serif);
+      font-size: 40px;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      color: var(--platin);
+      transition: color 0.25s;
+    }
+    .nav__mobile a:hover { color: var(--s300); }
+    .nav__mobile-close {
+      position: absolute;
+      top: 28px; right: var(--pad-x);
+      font-size: 28px;
+      color: var(--silver);
+      cursor: pointer;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       HERO — SCROLL ANIMATION
+       Scroll MEGA.md approach: 500vh, sticky, canvas frame swap
+    ══════════════════════════════════════════════════════════ */
+    #hero-scroll {
+      height: 500vh;
+      position: relative;
+    }
+
+    #hero-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--void);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Layered background glows */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-bg__radial {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80vmax;
+      height: 60vmax;
+      background: radial-gradient(ellipse at center,
+        rgba(40, 85, 204, 0.14) 0%,
+        rgba(26, 56, 153, 0.07) 40%,
+        transparent 70%
+      );
+      border-radius: 50%;
+      /* BACKGROUND EFFECT — configure here for scrolling color shift */
+      transition: opacity 0.1s;
+    }
+    .hero-bg__bottom {
+      position: absolute;
+      bottom: -20%;
+      left: 30%;
+      width: 40vmax;
+      height: 30vmax;
+      background: radial-gradient(ellipse at center,
+        rgba(14, 30, 90, 0.12) 0%,
+        transparent 70%
+      );
+      border-radius: 50%;
+      filter: blur(40px);
+    }
+    /* Subtle horizontal scan lines for depth */
+    .hero-bg__lines {
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(74, 120, 240, 0.012) 3px,
+        rgba(74, 120, 240, 0.012) 4px
+      );
+    }
+
+    /* Canvas: jewelry animation */
+    #hero-canvas {
+      position: absolute;
+      top: 50%;
+      /* Default: centered */
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: clamp(280px, 68vh, 620px);
+      width: auto;
+      z-index: 2;
+      /* Premium drop glow around the jewel */
+      filter: drop-shadow(0 0 50px rgba(74, 120, 240, 0.35))
+              drop-shadow(0 0 120px rgba(74, 120, 240, 0.18));
+    }
+    /* Desktop: shift canvas right to create space for hero text on the left */
+    @media (min-width: 768px) {
+      #hero-canvas {
+        left: 62%;
+      }
+    }
+
+    /* Hero text overlay: visible at start, fades on scroll — JS drives opacity */
+    .hero-text {
+      position: absolute;
+      z-index: 10;
+      pointer-events: none;
+      /* No CSS transition — RAF loop updates directly for scroll-sync */
+    }
+
+    /* Desktop: text on left side — vertically centered, clear of canvas which is right-shifted */
+    @media (min-width: 768px) {
+      .hero-text {
+        left: var(--pad-x);
+        top: 50%;
+        transform: translateY(-50%);
+        bottom: unset;
+        max-width: 44%;
+      }
+    }
+    /* Mobile: text at bottom center */
+    @media (max-width: 767px) {
+      .hero-text {
+        left: var(--pad-x);
+        right: var(--pad-x);
+        bottom: 80px;
+        text-align: center;
+      }
+    }
+
+    .hero-text .overline  { margin-bottom: 18px; }
+    .hero-text .hero-title { margin: 0 0 20px; }
+    .hero-text .hero-body  {
+      font-size: clamp(14px, 1.6vw, 16px);
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 32px;
+      font-weight: 300;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      pointer-events: all;
+    }
+    @media (max-width: 767px) {
+      .hero-actions { justify-content: center; }
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      right: var(--pad-x);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 10;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .scroll-hint__line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--s400), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    .scroll-hint__label {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--silver2);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(0.7); transform-origin: top; }
+      50%       { opacity: 1;   transform: scaleY(1);   }
+    }
+
+    /* End CTA: appears when animation finishes — JS drives opacity/transform */
+    #hero-end-cta {
+      position: absolute;
+      z-index: 10;
+      bottom: clamp(60px, 10vh, 110px);
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      opacity: 0;
+      pointer-events: none;
+      /* No CSS transition — scroll JS updates directly each RAF frame */
+    }
+    #hero-end-cta.is-visible { pointer-events: all; }
+
+    /* Loading overlay */
+    #hero-loading {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      background: var(--void);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease;
+    }
+    #hero-loading.is-hidden { opacity: 0; pointer-events: none; }
+    .loading-ring {
+      width: 40px; height: 40px;
+      border: 1px solid var(--bd-s);
+      border-top-color: var(--s400);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ══════════════════════════════════════════════════════════
+       MARQUEE — Trust bar
+    ══════════════════════════════════════════════════════════ */
+    .marquee-section {
+      background: var(--void);
+      border-top: 1px solid var(--bd-s);
+      border-bottom: 1px solid var(--bd-s);
+      padding: 20px 0;
+      overflow: hidden;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 0;
+      white-space: nowrap;
+      animation: marqueeScroll 28s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    .marquee-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 0 40px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.30em;
+      text-transform: uppercase;
+      color: var(--silver);
+    }
+    .marquee-dot {
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: var(--s400);
+      flex-shrink: 0;
+    }
+    @keyframes marqueeScroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       SHARED SECTION LAYOUT
+    ══════════════════════════════════════════════════════════ */
+    .section {
+      padding: var(--pad-sec) var(--pad-x);
+      position: relative;
+    }
+    .section__inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+    .section__header {
+      margin-bottom: clamp(48px, 7vw, 80px);
+    }
+    .section__header .overline { margin-bottom: 16px; }
+    .section__header p {
+      margin-top: 18px;
+      max-width: 520px;
+    }
+    .gold-rule {
+      width: 48px; height: 1px;
+      background: linear-gradient(90deg, var(--s400), transparent);
+      margin: 20px 0;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       SERVICES — 4 value pillars
+    ══════════════════════════════════════════════════════════ */
+    .services { background: var(--surface-1); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2px;
+    }
+    .service-card {
+      background: var(--surface-2);
+      padding: clamp(32px, 4vw, 52px) clamp(24px, 3vw, 36px);
+      border: 1px solid var(--bd-s);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0, 0, 1);
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--s500), var(--s300));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.25, 0, 0, 1);
+    }
+    .service-card:hover {
+      background: var(--surface-3);
+      transform: translateY(-4px);
+      box-shadow: var(--glow-sm), 0 16px 40px rgba(0,0,0,0.4);
+    }
+    .service-card:hover::before { transform: scaleX(1); }
+
+    .service-icon {
+      width: 48px; height: 48px;
+      margin-bottom: 28px;
+      color: var(--s400);
+    }
+    .service-icon svg {
+      width: 100%; height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .service-card h3 {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--platin);
+      margin-bottom: 14px;
+      letter-spacing: 0.02em;
+    }
+    .service-card p {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.75;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       COLLECTION SHOWCASE
+    ══════════════════════════════════════════════════════════ */
+    .collection { background: var(--deep); }
+
+    .collection-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(16px, 2.5vw, 28px);
+    }
+    @media (max-width: 900px)  { .collection-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px)  { .collection-grid { grid-template-columns: 1fr; } }
+
+    .collection-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid var(--bd-s);
+      aspect-ratio: 3 / 4;
+      background: var(--surface-2);
+      cursor: pointer;
+      group: true;
+      transition: transform 0.45s cubic-bezier(0.25, 0, 0, 1),
+                  box-shadow 0.45s cubic-bezier(0.25, 0, 0, 1);
+    }
+    .collection-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--glow-md), 0 24px 60px rgba(0,0,0,0.5);
+    }
+
+    /* Sapphire gradient placeholder for jewelry imagery */
+    .collection-card__visual {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .collection-card__visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+    .collection-card:nth-child(1) .collection-card__visual::before {
+      background: radial-gradient(ellipse 80% 70% at 50% 40%,
+        rgba(40, 85, 204, 0.30) 0%,
+        rgba(20, 40, 120, 0.15) 50%,
+        var(--surface-1) 100%);
+    }
+    .collection-card:nth-child(2) .collection-card__visual::before {
+      background: radial-gradient(ellipse 80% 70% at 50% 40%,
+        rgba(74, 120, 240, 0.25) 0%,
+        rgba(30, 56, 153, 0.12) 50%,
+        var(--surface-1) 100%);
+    }
+    .collection-card:nth-child(3) .collection-card__visual::before {
+      background: radial-gradient(ellipse 80% 70% at 50% 40%,
+        rgba(107, 159, 255, 0.20) 0%,
+        rgba(26, 56, 153, 0.10) 50%,
+        var(--surface-1) 100%);
+    }
+
+    /* Decorative gem icon */
+    .gem-icon {
+      position: relative;
+      z-index: 1;
+      width: 80px; height: 80px;
+      opacity: 0.5;
+      color: var(--s300);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    .collection-card:hover .gem-icon {
+      opacity: 0.8;
+      transform: scale(1.08);
+    }
+
+    .collection-card__info {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: clamp(20px, 3vw, 32px);
+      background: linear-gradient(to top, rgba(7,9,26,0.95) 0%, transparent 100%);
+      transform: translateY(8px);
+      transition: transform 0.4s cubic-bezier(0.25, 0, 0, 1);
+    }
+    .collection-card:hover .collection-card__info { transform: translateY(0); }
+    .collection-card__info .overline { margin-bottom: 8px; }
+    .collection-card__info h3 {
+      font-family: var(--serif);
+      font-size: clamp(22px, 2.5vw, 30px);
+      font-weight: 400;
+      color: var(--platin);
+      margin-bottom: 10px;
+    }
+    .collection-card__info p {
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 16px;
+    }
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--s300);
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.35s 0.05s, transform 0.35s 0.05s, color 0.25s;
+    }
+    .card-link:hover { color: var(--s200); }
+    .collection-card:hover .card-link { opacity: 1; transform: translateX(0); }
+    .card-link svg {
+      width: 14px; height: 14px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       ABOUT / STORY
+    ══════════════════════════════════════════════════════════ */
+    .about { background: var(--surface-1); }
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(48px, 7vw, 100px);
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .about-inner { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    .about__visual {
+      position: relative;
+    }
+    .about__gem-frame {
+      aspect-ratio: 1;
+      max-width: 480px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at 40% 35%,
+        rgba(40, 85, 204, 0.25) 0%,
+        rgba(20, 40, 120, 0.12) 40%,
+        rgba(7, 9, 26, 0.80) 70%
+      );
+      border: 1px solid var(--bd-s);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .about__gem-frame::before {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      border: 1px solid var(--bd-s);
+    }
+    .about__gem-frame::after {
+      content: '';
+      position: absolute;
+      top: 10%; left: 10%;
+      right: 10%; bottom: 10%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at 30% 30%,
+        rgba(147, 197, 253, 0.08), transparent 60%);
+    }
+    .about__gem-icon {
+      width: 120px; height: 120px;
+      color: var(--s400);
+      opacity: 0.6;
+      position: relative;
+      z-index: 1;
+    }
+
+    .about__content .overline   { margin-bottom: 16px; }
+    .about__content .gold-rule  { margin: 24px 0; }
+    .about__content p {
+      font-size: clamp(15px, 1.8vw, 17px);
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 18px;
+      font-weight: 300;
+    }
+    .about__content p:last-of-type { margin-bottom: 32px; }
+    .about__quote {
+      font-family: var(--serif);
+      font-size: clamp(18px, 2.4vw, 24px);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--s200);
+      line-height: 1.5;
+      padding-left: 24px;
+      border-left: 2px solid var(--s500);
+      margin: 28px 0 32px;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       CONTACT / VISIT
+    ══════════════════════════════════════════════════════════ */
+    .contact { background: var(--void); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(48px, 7vw, 100px);
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    /* Hours table */
+    .hours-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .hours-table tr {
+      border-bottom: 1px solid var(--bd-p);
+    }
+    .hours-table tr:last-child { border-bottom: none; }
+    .hours-table td {
+      padding: 13px 0;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text2);
+    }
+    .hours-table td:first-child {
+      color: var(--platin);
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      width: 50%;
+    }
+    .hours-table .closed { color: var(--text3); }
+    .hours-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      background: rgba(74, 120, 240, 0.12);
+      color: var(--s300);
+      border: 1px solid var(--bd-s);
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    .contact__info {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .contact__item-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--s300);
+      margin-bottom: 8px;
+    }
+    .contact__phone {
+      font-family: var(--serif);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 300;
+      color: var(--platin);
+      letter-spacing: 0.04em;
+      transition: color 0.25s;
+    }
+    .contact__phone:hover { color: var(--s200); }
+    .contact__address {
+      font-size: 16px;
+      color: var(--text2);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+    .contact__map-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--s300);
+      margin-top: 12px;
+      transition: color 0.25s;
+    }
+    .contact__map-link:hover { color: var(--s200); }
+    .contact__map-link svg {
+      width: 14px; height: 14px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2;
+    }
+    .contact-cta-block { margin-top: 48px; }
+    .contact-cta-block p {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════════════════════ */
+    .footer {
+      background: var(--void);
+      border-top: 1px solid var(--bd-s);
+      padding: 36px var(--pad-x);
+    }
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer__brand {
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.10em;
+      color: var(--text2);
+    }
+    .footer__links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .footer__links a {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text3);
+      transition: color 0.25s;
+    }
+    .footer__links a:hover { color: var(--text2); }
+    .footer__copy {
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: 0.05em;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       RESPONSIVE MOBILE
+    ══════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .nav__links { display: none; }
+      .nav__phone  { display: none; }
+      .nav__menu-toggle { display: flex; }
+
+      .services-grid { grid-template-columns: 1fr; gap: 2px; }
+      .footer-inner  { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       REVEAL ANIMATIONS — subtle fade-up on enter
+    ══════════════════════════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s cubic-bezier(0.25, 0, 0, 1),
+                  transform 0.8s cubic-bezier(0.25, 0, 0, 1);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal--delay-1 { transition-delay: 0.1s; }
+    .reveal--delay-2 { transition-delay: 0.2s; }
+    .reveal--delay-3 { transition-delay: 0.3s; }
+
+    /* ══════════════════════════════════════════════════════════
+       SKIP LINK (accessibility)
+    ══════════════════════════════════════════════════════════ */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 8px;
+      padding: 8px 16px;
+      background: var(--s500);
+      color: white;
+      font-size: 13px;
+      border-radius: 0 0 4px 4px;
+      z-index: 9999;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ══════════════════════════════════════════════════════════
+       HERO FLOATING BALLS — pre-animation idle state
+    ══════════════════════════════════════════════════════════ */
+    #hero-balls-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+      overflow: visible;
+    }
+    .hero-float-ball {
+      position: absolute;
+      left: 0;
+      top: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle at 32% 28%,
+        rgba(219,234,254,0.96) 0%,
+        rgba(147,197,253,0.92) 14%,
+        rgba(74, 120,240,0.96) 44%,
+        rgba(26, 56, 153,1.00) 71%,
+        rgba(10, 28,  90,1.00) 100%
+      );
+      box-shadow:
+        0 0 10px  rgba(74,120,240,0.85),
+        0 0 24px  rgba(74,120,240,0.50),
+        0 0 52px  rgba(40, 85,204,0.28),
+        inset 0 1px 2px rgba(255,255,255,0.42),
+        inset 0 -1px 3px rgba(10,28,90,0.55);
+      will-change: transform, opacity;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+  </style>
+</head>
+
+<body>
+  <a href="#main" class="skip-link">Zum Inhalt springen</a>
+
+  <!-- ═══════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════════ -->
+  <nav class="nav" id="main-nav" role="navigation" aria-label="Hauptnavigation">
+    <a href="#" class="nav__brand" aria-label="Achim Weidmann Juwelier">
+      Achim Weidmann
+      <span class="nav__brand-sub">Juwelier · Wiesbaden</span>
+    </a>
+
+    <ul class="nav__links" role="list">
+      <li><a href="#kollektion">Kollektion</a></li>
+      <li><a href="#atelier">Atelier</a></li>
+      <li><a href="#about">Über uns</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+
+    <div class="nav__cta">
+      <a href="tel:+496113742800" class="nav__phone" aria-label="Anrufen">0611 374280</a>
+      <button class="nav__menu-toggle" id="menu-toggle" aria-label="Menü öffnen" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile nav overlay -->
+  <div class="nav__mobile" id="mobile-nav" role="dialog" aria-label="Mobilmenü" aria-hidden="true">
+    <button class="nav__mobile-close" id="mobile-close" aria-label="Menü schließen">✕</button>
+    <a href="#kollektion" class="mobile-link">Kollektion</a>
+    <a href="#atelier"    class="mobile-link">Atelier</a>
+    <a href="#about"      class="mobile-link">Über uns</a>
+    <a href="#kontakt"    class="mobile-link">Kontakt</a>
+    <a href="tel:+496113742800" style="font-size:18px;letter-spacing:0.1em;color:var(--text2);margin-top:16px;">0611 374280</a>
+  </div>
+
+  <main id="main">
+
+    <!-- ═══════════════════════════════════════
+         HERO — SCROLL ANIMATION (MEGA.md approach)
+         500vh scroll container, sticky viewport,
+         canvas-based frame player
+    ══════════════════════════════════════════ -->
+    <section id="hero-scroll" aria-label="Hero">
+      <div id="hero-sticky">
+
+        <!-- Background layers -->
+        <div class="hero-bg" aria-hidden="true">
+          <div class="hero-bg__radial" id="hero-glow"></div>
+          <div class="hero-bg__bottom"></div>
+          <div class="hero-bg__lines"></div>
+        </div>
+
+        <!-- Frame animation canvas (900×672 internal resolution) -->
+        <canvas
+          id="hero-canvas"
+          width="900"
+          height="672"
+          aria-label="Schmuck-Animation"
+        ></canvas>
+
+        <!-- Hero text (visible at scroll 0, fades as scroll begins) -->
+        <div class="hero-text" id="hero-text">
+          <span class="overline">Meisterjuwelier · Wiesbaden</span>
+          <h1 class="display-hero hero-title" style="margin: 0 0 22px;">
+            Zeitlose<br>
+            <em>Eleganz</em>
+          </h1>
+          <p class="hero-body">
+            Handgefertigter Schmuck und edle Uhren<br>
+            für unvergessliche Momente.
+          </p>
+          <div class="hero-actions">
+            <a href="#kollektion" class="btn btn--primary">Kollektion entdecken</a>
+            <a href="#kontakt"    class="btn btn--ghost">Beratungsgespräch</a>
+          </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="scroll-hint" id="scroll-hint" aria-hidden="true">
+          <div class="scroll-hint__line"></div>
+          <span class="scroll-hint__label">Scrollen</span>
+        </div>
+
+        <!-- End CTA: fades in when animation completes -->
+        <div id="hero-end-cta" aria-hidden="true">
+          <span class="overline" style="margin-bottom: 18px;">Entdecken Sie die Kollektion</span>
+          <a href="#kollektion" class="btn btn--primary" style="pointer-events:all;">Jetzt entdecken</a>
+        </div>
+
+        <!-- Loading indicator -->
+        <div id="hero-loading" aria-hidden="true">
+          <div class="loading-ring"></div>
+        </div>
+
+        <!-- Floating balls: visible before scroll, smoothly merge into ring animation -->
+        <div id="hero-balls-container" aria-hidden="true"></div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         MARQUEE — Trust bar
+    ══════════════════════════════════════════ -->
+    <div class="marquee-section" aria-hidden="true">
+      <div class="marquee-track" id="marquee-track">
+        <!-- items duplicated for seamless loop -->
+        <span class="marquee-item"><span>Wiesbaden</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Meisterjuwelier</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Handwerkskunst</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Persönliche Beratung</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Exklusive Kollektionen</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Trauringe</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Edle Uhren</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Edelsteine</span><span class="marquee-dot"></span></span>
+        <!-- Duplicate for seamless loop -->
+        <span class="marquee-item"><span>Wiesbaden</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Meisterjuwelier</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Handwerkskunst</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Persönliche Beratung</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Exklusive Kollektionen</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Trauringe</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Edle Uhren</span><span class="marquee-dot"></span></span>
+        <span class="marquee-item"><span>Edelsteine</span><span class="marquee-dot"></span></span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         SERVICES — 4 value pillars
+    ══════════════════════════════════════════ -->
+    <section class="section services" id="atelier" aria-labelledby="services-heading">
+      <div class="section__inner">
+        <header class="section__header">
+          <span class="overline reveal">Was uns auszeichnet</span>
+          <h2 class="display-section reveal reveal--delay-1" id="services-heading">
+            Kunst. Qualität.<br><em>Leidenschaft.</em>
+          </h2>
+          <div class="gold-rule reveal reveal--delay-2"></div>
+        </header>
+
+        <div class="services-grid">
+
+          <article class="service-card reveal">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48">
+                <!-- Diamond/gem icon -->
+                <polygon points="24,6 38,16 38,32 24,42 10,32 10,16"/>
+                <polyline points="10,16 24,24 38,16"/>
+                <line x1="24" y1="24" x2="24" y2="42"/>
+                <line x1="10" y1="16" x2="17" y2="8"/>
+                <line x1="38" y1="16" x2="31" y2="8"/>
+              </svg>
+            </div>
+            <h3>Handwerkskunst</h3>
+            <p>Jedes Schmuckstück entsteht in unserem Atelier mit höchster handwerklicher Sorgfalt und jahrzehntelangem Fachwissen.</p>
+          </article>
+
+          <article class="service-card reveal reveal--delay-1">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48">
+                <!-- Shield/quality icon -->
+                <path d="M24 4 L40 10 L40 26 C40 35 24 44 24 44 C24 44 8 35 8 26 L8 10 Z"/>
+                <polyline points="16,23 21,28 32,18"/>
+              </svg>
+            </div>
+            <h3>Premium Qualität</h3>
+            <p>Nur erlesene Edelsteine und hochwertige Materialien – für Schmuck, der Generationen überdauert und immer begeistert.</p>
+          </article>
+
+          <article class="service-card reveal reveal--delay-2">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48">
+                <!-- Person/consultation icon -->
+                <circle cx="24" cy="14" r="8"/>
+                <path d="M8 42 C8 33 15 26 24 26 C33 26 40 33 40 42"/>
+              </svg>
+            </div>
+            <h3>Persönliche Beratung</h3>
+            <p>Wir nehmen uns Zeit für Sie. In einer ruhigen, diskreten Atmosphäre begleiten wir Sie bei der Wahl Ihres perfekten Stückes.</p>
+          </article>
+
+          <article class="service-card reveal reveal--delay-3">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48">
+                <!-- Star/excellence icon -->
+                <polygon points="24,4 29,18 44,18 32,27 37,42 24,33 11,42 16,27 4,18 19,18"/>
+              </svg>
+            </div>
+            <h3>Exklusivität</h3>
+            <p>Zeitlose Designs und limitierte Kollektionen, die Ihre Persönlichkeit unterstreichen und echte Bewunderung hervorrufen.</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         COLLECTION SHOWCASE
+    ══════════════════════════════════════════ -->
+    <section class="section collection" id="kollektion" aria-labelledby="collection-heading">
+      <div class="section__inner">
+        <header class="section__header">
+          <span class="overline reveal">Entdecken Sie</span>
+          <h2 class="display-section reveal reveal--delay-1" id="collection-heading">
+            Ausgewählte<br><em>Kollektionen</em>
+          </h2>
+          <div class="gold-rule reveal reveal--delay-2"></div>
+          <p class="body-text reveal reveal--delay-3">Von klassischen Solitären bis zu modernen Kreationen – wir führen Schmuck, Uhren und Trauringe für jeden besonderen Anlass.</p>
+        </header>
+
+        <div class="collection-grid">
+
+          <article class="collection-card reveal">
+            <div class="collection-card__visual">
+              <!-- Decorative gem SVG -->
+              <svg class="gem-icon" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="0.8" aria-hidden="true">
+                <polygon points="40,8 62,22 62,50 40,72 18,50 18,22"/>
+                <polyline points="18,22 40,34 62,22"/>
+                <line x1="40" y1="34" x2="40" y2="72"/>
+                <line x1="18" y1="22" x2="27" y2="12"/>
+                <line x1="62" y1="22" x2="53" y2="12"/>
+                <line x1="40" y1="8" x2="40" y2="34"/>
+              </svg>
+            </div>
+            <div class="collection-card__info">
+              <span class="overline">Kollektion</span>
+              <h3>Schmuck & Ringe</h3>
+              <p>Ringe, Ketten, Armbänder und Anhänger in höchster Verarbeitung.</p>
+              <span class="card-link">
+                Entdecken
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </span>
+            </div>
+          </article>
+
+          <article class="collection-card reveal reveal--delay-1">
+            <div class="collection-card__visual">
+              <svg class="gem-icon" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="0.8" aria-hidden="true">
+                <!-- Ring icon -->
+                <circle cx="40" cy="40" r="26"/>
+                <circle cx="40" cy="40" r="18"/>
+                <line x1="40" y1="14" x2="40" y2="22"/>
+                <line x1="40" y1="58" x2="40" y2="66"/>
+                <circle cx="40" cy="40" r="4"/>
+                <path d="M40,14 C44,12 52,12 55,17"/>
+                <path d="M40,14 C36,12 28,12 25,17"/>
+              </svg>
+            </div>
+            <div class="collection-card__info">
+              <span class="overline">Für Immer</span>
+              <h3>Trauringe</h3>
+              <p>Individuelle Trauringe, die Ihre Liebe für die Ewigkeit festhalten.</p>
+              <span class="card-link">
+                Entdecken
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </span>
+            </div>
+          </article>
+
+          <article class="collection-card reveal reveal--delay-2">
+            <div class="collection-card__visual">
+              <svg class="gem-icon" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="0.8" aria-hidden="true">
+                <!-- Watch icon -->
+                <circle cx="40" cy="40" r="20"/>
+                <circle cx="40" cy="40" r="15"/>
+                <rect x="32" y="10" width="16" height="10" rx="2"/>
+                <rect x="32" y="60" width="16" height="10" rx="2"/>
+                <line x1="40" y1="28" x2="40" y2="40"/>
+                <line x1="40" y1="40" x2="50" y2="40"/>
+                <circle cx="40" cy="40" r="2" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="collection-card__info">
+              <span class="overline">Präzision</span>
+              <h3>Edle Uhren</h3>
+              <p>Ausgesuchte Zeitmesser – Präzision und Eleganz auf dem Handgelenk.</p>
+              <span class="card-link">
+                Entdecken
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         ABOUT / STORY
+    ══════════════════════════════════════════ -->
+    <section class="section about" id="about" aria-labelledby="about-heading">
+      <div class="section__inner">
+        <div class="about-inner">
+
+          <div class="about__visual reveal">
+            <div class="about__gem-frame" aria-hidden="true">
+              <svg class="about__gem-icon" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="0.6" aria-hidden="true">
+                <polygon points="40,6 60,20 60,52 40,74 20,52 20,20"/>
+                <polyline points="20,20 40,32 60,20"/>
+                <line x1="40" y1="32" x2="40" y2="74"/>
+                <line x1="20" y1="20" x2="29" y2="10"/>
+                <line x1="60" y1="20" x2="51" y2="10"/>
+                <line x1="40" y1="6" x2="40" y2="32"/>
+                <line x1="29" y1="10" x2="40" y2="6"/>
+                <line x1="51" y1="10" x2="40" y2="6"/>
+                <line x1="20" y1="20" x2="40" y2="74"/>
+                <line x1="60" y1="20" x2="40" y2="74"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="about__content">
+            <span class="overline reveal">Über uns</span>
+            <h2 class="display-section reveal reveal--delay-1" id="about-heading">
+              Juwelier<br><em>in Wiesbaden</em>
+            </h2>
+            <div class="gold-rule reveal reveal--delay-1"></div>
+            <p class="reveal reveal--delay-2">
+              Seit Jahrzehnten steht Achim Weidmann in Wiesbaden für Schmuck, der bewegt. In unserem Atelier entstehen Stücke, die nicht nur tragen werden – sondern vererbt, erinnert und geliebt.
+            </p>
+            <blockquote class="about__quote reveal reveal--delay-2">
+              „Schmuck ist mehr als Materialwert. Er ist Ausdruck von Persönlichkeit, Liebe und unvergesslichen Momenten."
+            </blockquote>
+            <p class="reveal reveal--delay-3">
+              Unser Anspruch ist es, Ihnen höchste handwerkliche Qualität und eine persönliche, herzliche Beratung zu bieten – ganz gleich, ob Sie ein Einzelstück suchen oder einen Wunsch verwirklichen möchten.
+            </p>
+            <a href="#kontakt" class="btn btn--outline-sapphire reveal reveal--delay-3">
+              Termin vereinbaren
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         CONTACT / VISIT
+    ══════════════════════════════════════════ -->
+    <section class="section contact" id="kontakt" aria-labelledby="contact-heading">
+      <div class="section__inner">
+        <header class="section__header">
+          <span class="overline reveal">Besuchen Sie uns</span>
+          <h2 class="display-section reveal reveal--delay-1" id="contact-heading">
+            Wir freuen uns<br><em>auf Sie</em>
+          </h2>
+          <div class="gold-rule reveal reveal--delay-2"></div>
+        </header>
+
+        <div class="contact-grid">
+
+          <!-- Opening hours -->
+          <div class="reveal">
+            <p class="contact__item-label">Öffnungszeiten</p>
+            <table class="hours-table" aria-label="Öffnungszeiten">
+              <tbody>
+                <tr>
+                  <td>Dienstag<span class="hours-badge">Offen</span></td>
+                  <td>10:00 – 18:30</td>
+                </tr>
+                <tr>
+                  <td>Mittwoch</td>
+                  <td>10:00 – 18:30</td>
+                </tr>
+                <tr>
+                  <td>Donnerstag</td>
+                  <td>10:00 – 18:30</td>
+                </tr>
+                <tr>
+                  <td>Freitag</td>
+                  <td>10:00 – 18:30</td>
+                </tr>
+                <tr>
+                  <td>Samstag</td>
+                  <td>10:00 – 16:00</td>
+                </tr>
+                <tr>
+                  <td class="closed">Sonntag</td>
+                  <td class="closed">Geschlossen</td>
+                </tr>
+                <tr>
+                  <td class="closed">Montag</td>
+                  <td class="closed">Geschlossen</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Contact info -->
+          <div class="contact__info">
+            <div class="reveal">
+              <p class="contact__item-label">Telefon</p>
+              <a href="tel:+496113742800" class="contact__phone" aria-label="Anrufen 0611 374280">
+                0611 374280
+              </a>
+            </div>
+            <div class="reveal reveal--delay-1">
+              <p class="contact__item-label">Standort</p>
+              <address class="contact__address" style="font-style:normal;">
+                Achim Weidmann Juwelier<br>
+                Wiesbaden, Deutschland
+              </address>
+              <a href="https://maps.google.com/?q=Juwelier+Achim+Weidmann+Wiesbaden" target="_blank" rel="noopener noreferrer" class="contact__map-link">
+                In Google Maps öffnen
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+            <div class="contact-cta-block reveal reveal--delay-2">
+              <p>Vereinbaren Sie einen persönlichen Beratungstermin oder besuchen Sie uns einfach während unserer Öffnungszeiten.</p>
+              <a href="tel:+496113742800" class="btn btn--primary">Jetzt anrufen</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+      <span class="footer__brand">Achim Weidmann · Wiesbaden</span>
+      <ul class="footer__links" role="list">
+        <li><a href="#kollektion">Kollektion</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+        <li><a href="#" aria-label="Impressum">Impressum</a></li>
+        <li><a href="#" aria-label="Datenschutz">Datenschutz</a></li>
+      </ul>
+      <span class="footer__copy">© 2026 Achim Weidmann</span>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════════ -->
+  <script>
+    'use strict';
+
+    /* ══════════════════════════════════════
+       1. NAVIGATION — scroll state + mobile
+    ═══════════════════════════════════════ */
+    (function initNav() {
+      const nav         = document.getElementById('main-nav');
+      const toggle      = document.getElementById('menu-toggle');
+      const mobileNav   = document.getElementById('mobile-nav');
+      const closeBtn    = document.getElementById('mobile-close');
+      const mobileLinks = mobileNav.querySelectorAll('a, .mobile-link');
+
+      // Sticky scroll style
+      function updateNav() {
+        nav.classList.toggle('nav--scrolled', window.scrollY > 40);
+      }
+      window.addEventListener('scroll', updateNav, { passive: true });
+      updateNav();
+
+      // Mobile menu
+      function openMenu() {
+        mobileNav.classList.add('is-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        mobileNav.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeMenu() {
+        mobileNav.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        mobileNav.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+      toggle.addEventListener('click', openMenu);
+      closeBtn.addEventListener('click', closeMenu);
+      mobileLinks.forEach(link => link.addEventListener('click', closeMenu));
+      mobileNav.addEventListener('click', function(e) {
+        if (e.target === mobileNav) closeMenu();
+      });
+    })();
+
+    /* ══════════════════════════════════════
+       2. SCROLL ANIMATION — MEGA.md approach
+          Canvas frame player, 50 WebP frames
+    ═══════════════════════════════════════ */
+    (function initScrollAnimation() {
+      const FRAME_COUNT  = 50;
+      const canvas       = document.getElementById('hero-canvas');
+      const ctx          = canvas.getContext('2d');
+      // Internal resolution matches extracted frames
+      canvas.width  = 900;
+      canvas.height = 672;
+
+      const heroScroll   = document.getElementById('hero-scroll');
+      const heroText     = document.getElementById('hero-text');
+      const scrollHint   = document.getElementById('scroll-hint');
+      const heroEndCta   = document.getElementById('hero-end-cta');
+      const heroGlow     = document.getElementById('hero-glow');
+      const heroLoading  = document.getElementById('hero-loading');
+
+      // ── Preload all 50 frames ──
+      let loadedCount = 0;
+      let firstFrameLoaded = false;
+
+      const frames = Array.from({ length: FRAME_COUNT }, (_, i) => {
+        const img = new Image();
+        img.onload = function() {
+          loadedCount++;
+          // Show canvas and hide loader once first frame arrives
+          if (!firstFrameLoaded) {
+            firstFrameLoaded = true;
+            drawFrame(0);
+            heroLoading.classList.add('is-hidden');
+          }
+        };
+        img.onerror = function() {
+          console.warn('Frame failed to load:', img.src);
+        };
+        img.src = 'frames-web/frame-' + String(i + 1).padStart(3, '0') + '.webp';
+        return img;
+      });
+
+      // ── Draw a single frame onto canvas ──
+      function drawFrame(index) {
+        const clamped = Math.min(Math.max(Math.round(index), 0), FRAME_COUNT - 1);
+        const img = frames[clamped];
+        if (!img || !img.complete || !img.naturalWidth) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      }
+
+      // ── Scroll progress (0 → 1) ──
+      function getProgress() {
+        const rect  = heroScroll.getBoundingClientRect();
+        const total = heroScroll.offsetHeight - window.innerHeight;
+        const scrolled = -rect.top;
+        return Math.min(Math.max(scrolled / total, 0), 1);
+      }
+
+      // ── Update hero overlay elements based on progress ──
+      function updateOverlay(p) {
+        // Hero text: full opacity at 0%, fades from 10% → 28%
+        const textOpacity = p < 0.10 ? 1 : p < 0.28 ? 1 - (p - 0.10) / 0.18 : 0;
+        heroText.style.opacity = textOpacity;
+
+        // Scroll hint: visible at start, fades at 15%
+        const hintOpacity = p < 0.06 ? 1 : p < 0.15 ? 1 - (p - 0.06) / 0.09 : 0;
+        scrollHint.style.opacity = hintOpacity;
+
+        // End CTA: fades in from 82% → 95%
+        const ctaOpacity = p > 0.82 ? Math.min((p - 0.82) / 0.13, 1) : 0;
+        heroEndCta.style.opacity  = ctaOpacity;
+        heroEndCta.style.transform = 'translateX(-50%) translateY(' + ((1 - ctaOpacity) * 16) + 'px)';
+        if (ctaOpacity > 0.05) {
+          heroEndCta.classList.add('is-visible');
+          heroEndCta.setAttribute('aria-hidden', 'false');
+        } else {
+          heroEndCta.classList.remove('is-visible');
+          heroEndCta.setAttribute('aria-hidden', 'true');
+        }
+
+        // Background glow: subtle intensity shift
+        // BACKGROUND EFFECT — color shifts from low to high saturation as animation plays
+        if (heroGlow) {
+          const intensity = 0.12 + p * 0.28;
+          heroGlow.style.opacity = intensity;
+        }
+
+        // Canvas drop-shadow glow: intensifies mid-animation
+        const glowMid = Math.sin(p * Math.PI); // peaks at 50%
+        const glowA = (0.25 + glowMid * 0.20).toFixed(2);
+        const glowB = (0.12 + glowMid * 0.15).toFixed(2);
+        canvas.style.filter =
+          'drop-shadow(0 0 50px rgba(74,120,240,' + glowA + ')) ' +
+          'drop-shadow(0 0 120px rgba(74,120,240,' + glowB + '))';
+      }
+
+      // ── RAF scroll handler ──
+      let rafPending = false;
+      let lastProgress = -1;
+
+      function onScroll() {
+        if (rafPending) return;
+        rafPending = true;
+        requestAnimationFrame(function() {
+          rafPending = false;
+          const p = getProgress();
+          if (Math.abs(p - lastProgress) < 0.001 && p !== 0 && p !== 1) return;
+          lastProgress = p;
+
+          // Map progress to frame index
+          const frameIndex = Math.round(p * (FRAME_COUNT - 1));
+          drawFrame(frameIndex);
+          updateOverlay(p);
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+
+      // Initial draw on DOM ready
+      drawFrame(0);
+      updateOverlay(0);
+    })();
+
+    /* ══════════════════════════════════════
+       3. HERO FLOATING BALLS — idle float → scroll-merge into ring
+    ═══════════════════════════════════════ */
+    (function initHeroBalls() {
+      'use strict';
+
+      // ── Config ──────────────────────────────────────────────────
+      var BALL_COUNT       = 9;
+      var BALL_SIZE_CANVAS = 50;    // ball diameter in canvas px (900×672 space)
+
+      // Ring geometry in canvas coordinates (900 × 672)
+      // Adjust RING_CX / RING_CY / RING_R if the ring center differs in your frames
+      var RING_CX = 450;
+      var RING_CY = 310;
+      var RING_R  = 205;
+
+      // Scroll progress thresholds (0–1 over the 500vh hero range)
+      var T_MOVE = 0.04;   // balls start moving toward ring
+      var T_END  = 0.27;   // balls fully invisible / merged into canvas
+      var T_FADE = 0.68;   // fraction of T_MOVE→T_END at which opacity fade begins
+
+      // Home positions: [oxFraction, oyFraction] relative to viewport center
+      // Organic spread — keeps balls clear of hero text (left side desktop)
+      var HOME_OFFSETS = [
+        [-0.30, -0.22],
+        [-0.06, -0.30],
+        [ 0.19, -0.24],
+        [-0.37,  0.04],
+        [ 0.32, -0.04],
+        [-0.24,  0.22],
+        [ 0.06,  0.29],
+        [ 0.25,  0.18],
+        [-0.11,  0.10]
+      ];
+
+      // Idle float params: amplitude (px), frequency (rad/s), phase (rad)
+      var FLOAT = [
+        { ax:  9, ay: 13, fx: 0.40, fy: 0.31, ph: 0.00 },
+        { ax: 11, ay:  8, fx: 0.33, fy: 0.52, ph: 1.10 },
+        { ax:  6, ay: 14, fx: 0.51, fy: 0.39, ph: 2.30 },
+        { ax: 13, ay:  7, fx: 0.28, fy: 0.29, ph: 0.70 },
+        { ax:  8, ay: 11, fx: 0.44, fy: 0.61, ph: 1.80 },
+        { ax: 10, ay:  9, fx: 0.59, fy: 0.33, ph: 3.10 },
+        { ax:  7, ay: 12, fx: 0.47, fy: 0.42, ph: 2.00 },
+        { ax:  9, ay:  7, fx: 0.31, fy: 0.50, ph: 0.40 },
+        { ax: 12, ay: 10, fx: 0.41, fy: 0.27, ph: 1.50 }
+      ];
+
+      // ── DOM ──────────────────────────────────────────────────────
+      var heroScroll = document.getElementById('hero-scroll');
+      var canvas     = document.getElementById('hero-canvas');
+      var loading    = document.getElementById('hero-loading');
+      var container  = document.getElementById('hero-balls-container');
+
+      var ballEls = [];
+      for (var k = 0; k < BALL_COUNT; k++) {
+        var el = document.createElement('div');
+        el.className = 'hero-float-ball';
+        container.appendChild(el);
+        ballEls.push(el);
+      }
+
+      // ── State ────────────────────────────────────────────────────
+      var isLoaded    = false;
+      var startTime   = null;
+      var scrollP     = 0;
+      var ballSizePx  = 40;
+      var homePos     = [];   // screen-px centers, recomputed on resize
+      var targetPos   = [];   // screen-px centers, computed from canvas rect
+      var targetReady = false;
+
+      // ── Helpers ──────────────────────────────────────────────────
+      function easeInOutCubic(t) {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      }
+
+      function computeHomePos() {
+        var vw = window.innerWidth;
+        var vh = window.innerHeight;
+        homePos = HOME_OFFSETS.map(function(o) {
+          return { x: vw * 0.5 + o[0] * vw, y: vh * 0.5 + o[1] * vh };
+        });
+      }
+
+      function computeTargetPos() {
+        var rect   = canvas.getBoundingClientRect();
+        var scaleX = rect.width  / 900;
+        var scaleY = rect.height / 672;
+        targetPos  = [];
+        for (var i = 0; i < BALL_COUNT; i++) {
+          var angle = (i / BALL_COUNT) * Math.PI * 2 - Math.PI / 2;
+          targetPos.push({
+            x: rect.left + (RING_CX + Math.cos(angle) * RING_R) * scaleX,
+            y: rect.top  + (RING_CY + Math.sin(angle) * RING_R) * scaleY
+          });
+        }
+        targetReady = true;
+      }
+
+      function updateBallSize() {
+        var rect   = canvas.getBoundingClientRect();
+        var scaleY = rect.height / 672;
+        ballSizePx = Math.max(20, Math.round(BALL_SIZE_CANVAS * scaleY));
+        var s = ballSizePx + 'px';
+        ballEls.forEach(function(b) { b.style.width = s; b.style.height = s; });
+      }
+
+      function getScrollP() {
+        var rect    = heroScroll.getBoundingClientRect();
+        var total   = heroScroll.offsetHeight - window.innerHeight;
+        return Math.min(Math.max(-rect.top / total, 0), 1);
+      }
+
+      // ── Main RAF loop (GPU: only transform + opacity change) ─────
+      function tick(ts) {
+        if (!startTime) startTime = ts;
+        var t    = (ts - startTime) * 0.001;   // elapsed seconds
+        var p    = scrollP;
+        var tRaw = (p - T_MOVE) / (T_END - T_MOVE);
+        var tCl  = Math.min(Math.max(tRaw, 0), 1);
+        var ease = easeInOutCubic(tCl);
+        var fAmp = 1 - ease;                   // float amplitude shrinks to 0 at merge
+
+        if (tCl > 0 && !targetReady) computeTargetPos();
+
+        var hs = ballSizePx * 0.5;
+
+        for (var i = 0; i < BALL_COUNT; i++) {
+          if (!homePos[i]) continue;
+
+          var f   = FLOAT[i];
+          var fdx = f.ax * Math.sin(f.fx * t + f.ph)       * fAmp;
+          var fdy = f.ay * Math.cos(f.fy * t + f.ph * 0.7) * fAmp;
+
+          // Interpolated center position
+          var cx, cy;
+          if (!targetReady || tCl <= 0) {
+            cx = homePos[i].x;
+            cy = homePos[i].y;
+          } else if (tCl >= 1) {
+            cx = targetPos[i].x;
+            cy = targetPos[i].y;
+          } else {
+            cx = homePos[i].x + (targetPos[i].x - homePos[i].x) * ease;
+            cy = homePos[i].y + (targetPos[i].y - homePos[i].y) * ease;
+          }
+
+          // Single transform — compositor-only, no layout
+          ballEls[i].style.transform =
+            'translate(' + (cx - hs + fdx) + 'px,' + (cy - hs + fdy) + 'px)';
+
+          // Opacity: hidden until canvas loads; fades out as balls merge
+          var opacity = 0;
+          if (isLoaded) {
+            if (tCl >= 1) {
+              opacity = 0;
+            } else if (tCl > T_FADE) {
+              opacity = 1 - (tCl - T_FADE) / (1 - T_FADE);
+            } else {
+              opacity = 1;
+            }
+          }
+          ballEls[i].style.opacity = opacity;
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      // ── Startup ──────────────────────────────────────────────────
+      computeHomePos();
+      updateBallSize();
+      requestAnimationFrame(tick);
+
+      // Reveal balls the moment the canvas loading overlay hides
+      var loadObs = new MutationObserver(function() {
+        if (loading.classList.contains('is-hidden')) {
+          loadObs.disconnect();
+          isLoaded = true;
+        }
+      });
+      loadObs.observe(loading, { attributes: true, attributeFilter: ['class'] });
+
+      // ── Event listeners ──────────────────────────────────────────
+      window.addEventListener('scroll', function() {
+        scrollP = getScrollP();
+        if (scrollP >= T_MOVE && !targetReady) computeTargetPos();
+      }, { passive: true });
+
+      window.addEventListener('resize', function() {
+        computeHomePos();
+        updateBallSize();
+        targetReady = false;
+        if (scrollP >= T_MOVE) computeTargetPos();
+      });
+
+    })(); // end initHeroBalls
+
+    /* ══════════════════════════════════════
+       4. REVEAL ANIMATIONS — IntersectionObserver
+    ═══════════════════════════════════════ */
+    (function initReveal() {
+      const els = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        // Fallback: show all immediately
+        els.forEach(el => el.classList.add('is-visible'));
+        return;
+      }
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      els.forEach(el => observer.observe(el));
+    })();
+
+  </script>
+</body>
+</html>
