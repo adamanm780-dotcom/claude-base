@@ -323,16 +323,17 @@
     }
 
     /* ══════════════════════════════════════════════════════════
-       HERO — simple full-viewport section (no scroll animation)
+       HERO — scroll animation from 0318(4).mov
+       300vh scroll, sticky viewport, canvas frame swap
     ══════════════════════════════════════════════════════════ */
     #hero-scroll {
-      min-height: 100vh;
+      height: 300vh;
       position: relative;
-      display: flex;
-      align-items: center;
     }
 
     #hero-sticky {
+      position: sticky;
+      top: 0;
       width: 100%;
       height: 100vh;
       overflow: hidden;
@@ -340,6 +341,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    /* Canvas: ultrawide 1200×510, centered, full width */
+    #hero-canvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: auto;
+      max-height: 90vh;
+      z-index: 2;
+      filter: drop-shadow(0 0 50px rgba(74, 120, 240, 0.30))
+              drop-shadow(0 0 120px rgba(74, 120, 240, 0.15));
     }
 
     /* Layered background glows */
@@ -1037,12 +1052,15 @@
 
         <!-- Background layers -->
         <div class="hero-bg" aria-hidden="true">
-          <div class="hero-bg__radial"></div>
+          <div class="hero-bg__radial" id="hero-glow"></div>
           <div class="hero-bg__bottom"></div>
           <div class="hero-bg__lines"></div>
         </div>
 
-        <!-- Hero text — static, always visible -->
+        <!-- Hero scroll animation canvas (1200×510) -->
+        <canvas id="hero-canvas" width="1200" height="510" aria-label="Schmuck-Animation"></canvas>
+
+        <!-- Hero text — fades out as scroll begins -->
         <div class="hero-text" id="hero-text">
           <span class="overline">Meisterjuwelier · Wiesbaden</span>
           <h1 class="display-hero hero-title" style="margin: 0 0 22px;">
@@ -1060,7 +1078,7 @@
         </div>
 
         <!-- Scroll indicator -->
-        <div class="scroll-hint" aria-hidden="true">
+        <div class="scroll-hint" id="hero-scroll-hint" aria-hidden="true">
           <div class="scroll-hint__line"></div>
           <span class="scroll-hint__label">Scrollen</span>
         </div>
@@ -1436,8 +1454,72 @@
     })();
 
     /* ══════════════════════════════════════
-       2. SCROLL ANIMATION — 50 WebP frames from 0318(5).mov
-          Canvas inside about circle, scroll-driven
+       2. HERO SCROLL ANIMATION — 0318(4).mov
+          50 frames in hero-frames/, text fades on scroll
+    ═══════════════════════════════════════ */
+    (function initHeroScroll() {
+      var N = 50;
+      var c = document.getElementById('hero-canvas');
+      if (!c) return;
+      var ctx = c.getContext('2d');
+      c.width = 1200; c.height = 510;
+
+      var el = document.getElementById('hero-scroll');
+      var txt = document.getElementById('hero-text');
+      var hint = document.getElementById('hero-scroll-hint');
+      var glow = document.getElementById('hero-glow');
+
+      var frames = [], loaded = false;
+      for (var i = 0; i < N; i++) {
+        (function(idx) {
+          var img = new Image();
+          img.onload = function() { if (!loaded) { loaded = true; draw(0); } };
+          img.src = 'hero-frames/frame-' + String(idx + 1).padStart(3, '0') + '.webp';
+          frames.push(img);
+        })(i);
+      }
+
+      function draw(n) {
+        n = Math.min(Math.max(Math.round(n), 0), N - 1);
+        var img = frames[n];
+        if (!img || !img.complete || !img.naturalWidth) return;
+        ctx.clearRect(0, 0, 1200, 510);
+        ctx.drawImage(img, 0, 0, 1200, 510);
+      }
+
+      function prog() {
+        var r = el.getBoundingClientRect();
+        return Math.min(Math.max(-r.top / (el.offsetHeight - innerHeight), 0), 1);
+      }
+
+      var raf = false;
+      addEventListener('scroll', function() {
+        if (raf) return;
+        raf = true;
+        requestAnimationFrame(function() {
+          raf = false;
+          var p = prog();
+          draw(Math.round(p * (N - 1)));
+          // Text fades 0–25%
+          txt.style.opacity = p < 0.08 ? 1 : p < 0.25 ? 1 - (p - 0.08) / 0.17 : 0;
+          // Scroll hint fades 0–12%
+          hint.style.opacity = p < 0.05 ? 1 : p < 0.12 ? 1 - (p - 0.05) / 0.07 : 0;
+          // Glow intensifies
+          if (glow) glow.style.opacity = (0.12 + p * 0.28).toFixed(2);
+          // Canvas glow peaks mid-scroll
+          var g = Math.sin(p * Math.PI);
+          c.style.filter =
+            'drop-shadow(0 0 50px rgba(74,120,240,' + (0.25 + g * 0.20).toFixed(2) + ')) ' +
+            'drop-shadow(0 0 120px rgba(74,120,240,' + (0.12 + g * 0.15).toFixed(2) + '))';
+        });
+      }, { passive: true });
+
+      draw(0);
+    })();
+
+    /* ══════════════════════════════════════
+       3. ABOUT SCROLL ANIMATION — 0318(5).mov
+          50 frames in frames-web/, canvas inside circle
     ═══════════════════════════════════════ */
     (function initScrollAnimation() {
       var FRAME_COUNT = 50;
@@ -1497,7 +1579,7 @@
     })();
 
     /* ══════════════════════════════════════
-       3. REVEAL ANIMATIONS — IntersectionObserver
+       4. REVEAL ANIMATIONS — IntersectionObserver
     ═══════════════════════════════════════ */
     (function initReveal() {
       const els = document.querySelectorAll('.reveal');
