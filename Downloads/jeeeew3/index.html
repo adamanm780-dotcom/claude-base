@@ -395,22 +395,20 @@
       );
     }
 
-    /* Video: ring animation */
-    #hero-video {
+    /* Canvas: jewelry animation */
+    #hero-canvas {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       height: clamp(280px, 68vh, 620px);
       width: clamp(280px, 68vh, 620px);
-      object-fit: contain;
       z-index: 2;
       filter: drop-shadow(0 0 50px rgba(74, 120, 240, 0.35))
               drop-shadow(0 0 120px rgba(74, 120, 240, 0.18));
     }
-    /* Desktop: shift right to create space for hero text */
     @media (min-width: 768px) {
-      #hero-video {
+      #hero-canvas {
         left: 62%;
       }
     }
@@ -1153,19 +1151,13 @@
           <div class="hero-bg__lines"></div>
         </div>
 
-        <!-- Ring animation video (scroll-controlled) -->
-        <video
-          id="hero-video"
-          src="ringi.mp4"
-          muted
-          playsinline
-          preload="auto"
-          poster="frames-web/frame-001.webp"
-          aria-label="Ring-Animation"
-        >
-          <source src="ringi.webm" type="video/webm" />
-          <source src="ringi.mp4"  type="video/mp4"  />
-        </video>
+        <!-- Frame animation canvas (1080×1080, 55 frames, transparent bg) -->
+        <canvas
+          id="hero-canvas"
+          width="1080"
+          height="1080"
+          aria-label="Schmuck-Animation"
+        ></canvas>
 
         <!-- Hero text (visible at scroll 0, fades as scroll begins) -->
         <div class="hero-text" id="hero-text">
@@ -1601,30 +1593,46 @@
     })();
 
     /* ══════════════════════════════════════
-       2. SCROLL ANIMATION — video scrubbing
-          ringi.mp4 / ringi.webm, scroll-controlled
+       2. SCROLL ANIMATION — canvas frame player
+          55 WebP frames, transparent background
     ═══════════════════════════════════════ */
     (function initScrollAnimation() {
-      const video      = document.getElementById('hero-video');
-      const heroScroll = document.getElementById('hero-scroll');
-      const heroText   = document.getElementById('hero-text');
-      const scrollHint = document.getElementById('scroll-hint');
-      const heroEndCta = document.getElementById('hero-end-cta');
-      const heroGlow   = document.getElementById('hero-glow');
+      const FRAME_COUNT = 55;
+      const canvas      = document.getElementById('hero-canvas');
+      const ctx         = canvas.getContext('2d');
+      canvas.width  = 1080;
+      canvas.height = 1080;
+
+      const heroScroll  = document.getElementById('hero-scroll');
+      const heroText    = document.getElementById('hero-text');
+      const scrollHint  = document.getElementById('scroll-hint');
+      const heroEndCta  = document.getElementById('hero-end-cta');
+      const heroGlow    = document.getElementById('hero-glow');
       const heroLoading = document.getElementById('hero-loading');
 
-      // ── Hide loader once video is ready ──
-      function onVideoReady() {
-        heroLoading.classList.add('is-hidden');
-        video.currentTime = 0;
-        updateOverlay(0);
-      }
-      if (video.readyState >= 2) {
-        onVideoReady();
-      } else {
-        video.addEventListener('loadeddata', onVideoReady, { once: true });
-        // Fallback: hide loader after 3s regardless
-        setTimeout(function() { heroLoading.classList.add('is-hidden'); }, 3000);
+      // ── Preload all 55 frames ──
+      let firstFrameLoaded = false;
+
+      const frames = Array.from({ length: FRAME_COUNT }, (_, i) => {
+        const img = new Image();
+        img.onload = function() {
+          if (!firstFrameLoaded) {
+            firstFrameLoaded = true;
+            drawFrame(0);
+            heroLoading.classList.add('is-hidden');
+          }
+        };
+        img.src = 'frames-web2/frame-' + String(i + 1).padStart(3, '0') + '.webp';
+        return img;
+      });
+
+      // ── Draw frame (transparent — clearRect keeps site bg visible) ──
+      function drawFrame(index) {
+        const clamped = Math.min(Math.max(Math.round(index), 0), FRAME_COUNT - 1);
+        const img = frames[clamped];
+        if (!img || !img.complete || !img.naturalWidth) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       }
 
       // ── Scroll progress (0 → 1) ──
@@ -1634,17 +1642,14 @@
         return Math.min(Math.max(-rect.top / total, 0), 1);
       }
 
-      // ── Update overlay elements ──
+      // ── Overlay updates ──
       function updateOverlay(p) {
-        // Hero text: fades out 10% → 28%
         const textOpacity = p < 0.10 ? 1 : p < 0.28 ? 1 - (p - 0.10) / 0.18 : 0;
         heroText.style.opacity = textOpacity;
 
-        // Scroll hint: fades out 6% → 15%
         const hintOpacity = p < 0.06 ? 1 : p < 0.15 ? 1 - (p - 0.06) / 0.09 : 0;
         scrollHint.style.opacity = hintOpacity;
 
-        // End CTA: fades in 82% → 95%
         const ctaOpacity = p > 0.82 ? Math.min((p - 0.82) / 0.13, 1) : 0;
         heroEndCta.style.opacity   = ctaOpacity;
         heroEndCta.style.transform = 'translateX(-50%) translateY(' + ((1 - ctaOpacity) * 16) + 'px)';
@@ -1656,20 +1661,18 @@
           heroEndCta.setAttribute('aria-hidden', 'true');
         }
 
-        // Background glow
         if (heroGlow) heroGlow.style.opacity = 0.12 + p * 0.28;
 
-        // Video glow: peaks mid-animation
         const glowMid = Math.sin(p * Math.PI);
         const glowA   = (0.25 + glowMid * 0.20).toFixed(2);
         const glowB   = (0.12 + glowMid * 0.15).toFixed(2);
-        video.style.filter =
+        canvas.style.filter =
           'drop-shadow(0 0 50px rgba(74,120,240,' + glowA + ')) ' +
           'drop-shadow(0 0 120px rgba(74,120,240,' + glowB + '))';
       }
 
-      // ── RAF scroll scrub ──
-      let rafPending  = false;
+      // ── RAF scroll handler ──
+      let rafPending   = false;
       let lastProgress = -1;
 
       function onScroll() {
@@ -1678,23 +1681,15 @@
         requestAnimationFrame(function() {
           rafPending = false;
           const p = getProgress();
-          if (Math.abs(p - lastProgress) < 0.0005) return;
+          if (Math.abs(p - lastProgress) < 0.001 && p !== 0 && p !== 1) return;
           lastProgress = p;
-
-          // Scrub video to exact time
-          if (video.duration) {
-            const t = p * video.duration;
-            if (video.fastSeek) {
-              video.fastSeek(t);
-            } else {
-              video.currentTime = t;
-            }
-          }
+          drawFrame(Math.round(p * (FRAME_COUNT - 1)));
           updateOverlay(p);
         });
       }
 
       window.addEventListener('scroll', onScroll, { passive: true });
+      drawFrame(0);
       updateOverlay(0);
     })();
 
