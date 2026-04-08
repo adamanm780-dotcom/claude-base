@@ -343,7 +343,7 @@
       justify-content: center;
     }
 
-    /* Canvas: ultrawide 1200×510, centered, full width */
+    /* Canvas: ultrawide 2000×848, centered, full width */
     #hero-canvas {
       position: absolute;
       top: 50%;
@@ -1057,8 +1057,8 @@
           <div class="hero-bg__lines"></div>
         </div>
 
-        <!-- Hero scroll animation canvas (1200×510) -->
-        <canvas id="hero-canvas" width="1200" height="510" aria-label="Schmuck-Animation"></canvas>
+        <!-- Hero scroll animation canvas (2000×848) -->
+        <canvas id="hero-canvas" width="2000" height="848" aria-label="Schmuck-Animation"></canvas>
 
         <!-- Hero text — fades out as scroll begins -->
         <div class="hero-text" id="hero-text">
@@ -1462,7 +1462,7 @@
       var c = document.getElementById('hero-canvas');
       if (!c) return;
       var ctx = c.getContext('2d');
-      c.width = 1200; c.height = 510;
+      c.width = 2000; c.height = 848;
 
       var el = document.getElementById('hero-scroll');
       var txt = document.getElementById('hero-text');
@@ -1483,8 +1483,8 @@
         n = Math.min(Math.max(Math.round(n), 0), N - 1);
         var img = frames[n];
         if (!img || !img.complete || !img.naturalWidth) return;
-        ctx.clearRect(0, 0, 1200, 510);
-        ctx.drawImage(img, 0, 0, 1200, 510);
+        ctx.clearRect(0, 0, 2000, 848);
+        ctx.drawImage(img, 0, 0, 2000, 848);
       }
 
       function prog() {
