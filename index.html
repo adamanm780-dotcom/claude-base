@@ -413,16 +413,15 @@
       padding: 0 var(--pad-x);
     }
 
-    /* Canvas sits inside the gem-frame circle — clipped by border-radius + overflow:hidden */
+    /* Canvas sits inside the gem-frame circle — clipped by border-radius + overflow:hidden.
+       Portrait canvas (600×802): width fills the circle, height overflows and is clipped. */
     #anim-canvas {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      /* Canvas is 900×672 — taller setting ensures ring fills the circle */
-      height: 100%;
-      width: auto;
-      min-width: 100%;
+      width: 100%;
+      height: auto;
     }
 
     /* Loading ring inside the circle */
@@ -1355,8 +1354,8 @@
                 <!-- Animation canvas — clipped to circle by overflow:hidden on parent -->
                 <canvas
                   id="anim-canvas"
-                  width="900"
-                  height="672"
+                  width="600"
+                  height="802"
                   aria-label="Schmuck-Animation"
                 ></canvas>
                 <!-- Loading spinner inside circle -->
@@ -1544,8 +1543,8 @@
       const canvas        = document.getElementById('anim-canvas');
       if (!canvas) return;
       const ctx           = canvas.getContext('2d');
-      canvas.width  = 900;
-      canvas.height = 672;
+      canvas.width  = 600;
+      canvas.height = 802;
 
       // Scroll container: the about section drives progress
       const aboutScroll   = document.getElementById('about-scroll');
