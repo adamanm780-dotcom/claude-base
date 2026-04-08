@@ -7,9 +7,6 @@
   <meta name="description" content="Achim Weidmann – Ihr Juwelier in Wiesbaden. Handgefertigter Schmuck, edle Uhren, Trauringe und persönliche Beratung auf höchstem Niveau." />
   <meta name="theme-color" content="#050810" />
 
-  <!-- Preload first animation frame -->
-  <link rel="preload" href="frames-web/frame-001.webp" as="image" type="image/webp" />
-
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -393,50 +390,6 @@
       );
     }
 
-    /* ══════════════════════════════════════════════════════════
-       ABOUT — SCROLL ANIMATION (canvas inside circle)
-       350vh scroll container, sticky at 100vh, canvas clips to circle
-    ══════════════════════════════════════════════════════════ */
-    #about-scroll {
-      height: 350vh;
-      position: relative;
-    }
-
-    #about-sticky {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      background: var(--surface-1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 var(--pad-x);
-    }
-
-    /* Canvas sits inside the gem-frame circle — clipped by border-radius + overflow:hidden.
-       Portrait canvas (600×802): width fills the circle, height overflows and is clipped. */
-    #anim-canvas {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      height: auto;
-    }
-
-    /* Loading ring inside the circle */
-    #anim-loading {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--surface-2);
-      transition: opacity 0.6s ease;
-      z-index: 2;
-    }
-    #anim-loading.is-hidden { opacity: 0; pointer-events: none; }
-
     /* Hero text — static, always fully visible */
     .hero-text {
       position: absolute;
@@ -512,45 +465,6 @@
       0%, 100% { opacity: 0.4; transform: scaleY(0.7); transform-origin: top; }
       50%       { opacity: 1;   transform: scaleY(1);   }
     }
-
-    /* End CTA: appears when animation finishes — JS drives opacity/transform */
-    #hero-end-cta {
-      position: absolute;
-      z-index: 10;
-      bottom: clamp(60px, 10vh, 110px);
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      opacity: 0;
-      pointer-events: none;
-      /* No CSS transition — scroll JS updates directly each RAF frame */
-    }
-    #hero-end-cta.is-visible { pointer-events: all; }
-
-    /* Loading overlay */
-    #hero-loading {
-      position: absolute;
-      inset: 0;
-      z-index: 20;
-      background: var(--void);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.8s ease;
-    }
-    #hero-loading.is-hidden { opacity: 0; pointer-events: none; }
-    .loading-ring {
-      width: 40px; height: 40px;
-      border: 1px solid var(--bd-s);
-      border-top-color: var(--s400);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ══════════════════════════════════════════════════════════
        MARQUEE — Trust bar
@@ -800,8 +714,7 @@
     /* ══════════════════════════════════════════════════════════
        ABOUT / STORY
     ══════════════════════════════════════════════════════════ */
-    /* .about background now comes from #about-sticky */
-    .about { background: transparent; padding: 0; }
+    .about { background: var(--surface-1); }
     .about-inner {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -818,14 +731,18 @@
     .about__gem-frame {
       aspect-ratio: 1;
       max-width: 480px;
-      width: 100%;
       border-radius: 50%;
-      background: var(--surface-1);
+      background: radial-gradient(ellipse at 40% 35%,
+        rgba(40, 85, 204, 0.25) 0%,
+        rgba(20, 40, 120, 0.12) 40%,
+        rgba(7, 9, 26, 0.80) 70%
+      );
       border: 1px solid var(--bd-s);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
-      overflow: hidden; /* clips canvas to circle */
-      box-shadow: 0 0 80px rgba(74, 120, 240, 0.18),
-                  0 0 0 1px var(--bd-s);
+      overflow: hidden;
     }
     .about__gem-frame::before {
       content: '';
@@ -1339,54 +1256,49 @@
     </section>
 
     <!-- ═══════════════════════════════════════
-         ABOUT — SCROLL ANIMATION IN CIRCLE
-         350vh scroll container, canvas frame player
-         clips to circle via overflow:hidden on gem-frame
+         ABOUT / STORY
     ══════════════════════════════════════════ -->
-    <section id="about-scroll" aria-labelledby="about-heading">
-      <div id="about-sticky">
-        <div class="section__inner" style="width:100%;">
-          <div class="about-inner">
+    <section class="section about" id="about" aria-labelledby="about-heading">
+      <div class="section__inner">
+        <div class="about-inner">
 
-            <!-- LEFT: circular frame with scroll animation -->
-            <div class="about__visual">
-              <div class="about__gem-frame">
-                <!-- Animation canvas — clipped to circle by overflow:hidden on parent -->
-                <canvas
-                  id="anim-canvas"
-                  width="600"
-                  height="802"
-                  aria-label="Schmuck-Animation"
-                ></canvas>
-                <!-- Loading spinner inside circle -->
-                <div id="anim-loading" aria-hidden="true">
-                  <div class="loading-ring"></div>
-                </div>
-              </div>
+          <div class="about__visual reveal">
+            <div class="about__gem-frame" aria-hidden="true">
+              <svg class="about__gem-icon" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="0.6" aria-hidden="true">
+                <polygon points="40,6 60,20 60,52 40,74 20,52 20,20"/>
+                <polyline points="20,20 40,32 60,20"/>
+                <line x1="40" y1="32" x2="40" y2="74"/>
+                <line x1="20" y1="20" x2="29" y2="10"/>
+                <line x1="60" y1="20" x2="51" y2="10"/>
+                <line x1="40" y1="6" x2="40" y2="32"/>
+                <line x1="29" y1="10" x2="40" y2="6"/>
+                <line x1="51" y1="10" x2="40" y2="6"/>
+                <line x1="20" y1="20" x2="40" y2="74"/>
+                <line x1="60" y1="20" x2="40" y2="74"/>
+              </svg>
             </div>
-
-            <!-- RIGHT: text content -->
-            <div class="about__content" id="about">
-              <span class="overline reveal">Über uns</span>
-              <h2 class="display-section reveal reveal--delay-1" id="about-heading">
-                Juwelier<br><em>in Wiesbaden</em>
-              </h2>
-              <div class="gold-rule reveal reveal--delay-1"></div>
-              <p class="reveal reveal--delay-2">
-                Seit Jahrzehnten steht Achim Weidmann in Wiesbaden für Schmuck, der bewegt. In unserem Atelier entstehen Stücke, die nicht nur tragen werden – sondern vererbt, erinnert und geliebt.
-              </p>
-              <blockquote class="about__quote reveal reveal--delay-2">
-                „Schmuck ist mehr als Materialwert. Er ist Ausdruck von Persönlichkeit, Liebe und unvergesslichen Momenten."
-              </blockquote>
-              <p class="reveal reveal--delay-3">
-                Unser Anspruch ist es, Ihnen höchste handwerkliche Qualität und eine persönliche, herzliche Beratung zu bieten – ganz gleich, ob Sie ein Einzelstück suchen oder einen Wunsch verwirklichen möchten.
-              </p>
-              <a href="#kontakt" class="btn btn--outline-sapphire reveal reveal--delay-3">
-                Termin vereinbaren
-              </a>
-            </div>
-
           </div>
+
+          <div class="about__content">
+            <span class="overline reveal">Über uns</span>
+            <h2 class="display-section reveal reveal--delay-1" id="about-heading">
+              Juwelier<br><em>in Wiesbaden</em>
+            </h2>
+            <div class="gold-rule reveal reveal--delay-1"></div>
+            <p class="reveal reveal--delay-2">
+              Seit Jahrzehnten steht Achim Weidmann in Wiesbaden für Schmuck, der bewegt. In unserem Atelier entstehen Stücke, die nicht nur tragen werden – sondern vererbt, erinnert und geliebt.
+            </p>
+            <blockquote class="about__quote reveal reveal--delay-2">
+              „Schmuck ist mehr als Materialwert. Er ist Ausdruck von Persönlichkeit, Liebe und unvergesslichen Momenten."
+            </blockquote>
+            <p class="reveal reveal--delay-3">
+              Unser Anspruch ist es, Ihnen höchste handwerkliche Qualität und eine persönliche, herzliche Beratung zu bieten – ganz gleich, ob Sie ein Einzelstück suchen oder einen Wunsch verwirklichen möchten.
+            </p>
+            <a href="#kontakt" class="btn btn--outline-sapphire reveal reveal--delay-3">
+              Termin vereinbaren
+            </a>
+          </div>
+
         </div>
       </div>
     </section>
@@ -1535,91 +1447,7 @@
     })();
 
     /* ══════════════════════════════════════
-       2. SCROLL ANIMATION — MEGA.md approach
-          Canvas frame player, 50 WebP frames
-    ═══════════════════════════════════════ */
-    (function initScrollAnimation() {
-      const FRAME_COUNT   = 50;
-      const canvas        = document.getElementById('anim-canvas');
-      if (!canvas) return;
-      const ctx           = canvas.getContext('2d');
-      canvas.width  = 600;
-      canvas.height = 802;
-
-      // Scroll container: the about section drives progress
-      const aboutScroll   = document.getElementById('about-scroll');
-      const animLoading   = document.getElementById('anim-loading');
-      const gemFrame      = canvas.parentElement; // .about__gem-frame
-
-      // ── Preload all 50 frames ──
-      let firstFrameLoaded = false;
-
-      const frames = Array.from({ length: FRAME_COUNT }, (_, i) => {
-        const img = new Image();
-        img.onload = function() {
-          if (!firstFrameLoaded) {
-            firstFrameLoaded = true;
-            drawFrame(0);
-            if (animLoading) animLoading.classList.add('is-hidden');
-          }
-        };
-        img.onerror = function() { console.warn('Frame failed:', img.src); };
-        img.src = 'frames-web/frame-' + String(i + 1).padStart(3, '0') + '.webp';
-        return img;
-      });
-
-      // ── Draw a frame ──
-      function drawFrame(index) {
-        const clamped = Math.min(Math.max(Math.round(index), 0), FRAME_COUNT - 1);
-        const img = frames[clamped];
-        if (!img || !img.complete || !img.naturalWidth) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      }
-
-      // ── Scroll progress: 0 when about section enters, 1 when it exits ──
-      function getProgress() {
-        if (!aboutScroll) return 0;
-        const rect  = aboutScroll.getBoundingClientRect();
-        const total = aboutScroll.offsetHeight - window.innerHeight;
-        const scrolled = -rect.top;
-        return Math.min(Math.max(scrolled / total, 0), 1);
-      }
-
-      // ── Update glow based on progress (BACKGROUND EFFECT) ──
-      function updateGlow(p) {
-        if (!gemFrame) return;
-        const glowMid = Math.sin(p * Math.PI); // peaks at 50% of scroll
-        const a = (0.18 + glowMid * 0.28).toFixed(2);
-        gemFrame.style.boxShadow =
-          '0 0 ' + Math.round(60 + glowMid * 80) + 'px rgba(74,120,240,' + a + '),' +
-          '0 0 0 1px rgba(74,120,240,0.18)';
-      }
-
-      // ── RAF scroll handler ──
-      let rafPending = false;
-      let lastProgress = -1;
-
-      function onScroll() {
-        if (rafPending) return;
-        rafPending = true;
-        requestAnimationFrame(function() {
-          rafPending = false;
-          const p = getProgress();
-          if (Math.abs(p - lastProgress) < 0.001 && p !== 0 && p !== 1) return;
-          lastProgress = p;
-          drawFrame(Math.round(p * (FRAME_COUNT - 1)));
-          updateGlow(p);
-        });
-      }
-
-      window.addEventListener('scroll', onScroll, { passive: true });
-      drawFrame(0);
-      updateGlow(0);
-    })();
-
-    /* ══════════════════════════════════════
-       3. REVEAL ANIMATIONS — IntersectionObserver
+       2. REVEAL ANIMATIONS — IntersectionObserver
     ═══════════════════════════════════════ */
     (function initReveal() {
       const els = document.querySelectorAll('.reveal');
