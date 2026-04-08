@@ -326,17 +326,17 @@
     }
 
     /* ══════════════════════════════════════════════════════════
-       HERO — SCROLL ANIMATION
-       Scroll MEGA.md approach: 500vh, sticky, canvas frame swap
+       HERO — simple full-viewport section (no scroll animation)
     ══════════════════════════════════════════════════════════ */
     #hero-scroll {
-      height: 500vh;
+      min-height: 100vh;
       position: relative;
+      display: flex;
+      align-items: center;
     }
 
     #hero-sticky {
-      position: sticky;
-      top: 0;
+      width: 100%;
       height: 100vh;
       overflow: hidden;
       background: var(--void);
@@ -393,46 +393,67 @@
       );
     }
 
-    /* Canvas: jewelry animation */
-    #hero-canvas {
-      position: absolute;
-      top: 50%;
-      /* Default: centered */
-      left: 50%;
-      transform: translate(-50%, -50%);
-      height: clamp(280px, 68vh, 620px);
-      width: auto;
-      z-index: 2;
-      /* Premium drop glow around the jewel */
-      filter: drop-shadow(0 0 50px rgba(74, 120, 240, 0.35))
-              drop-shadow(0 0 120px rgba(74, 120, 240, 0.18));
-    }
-    /* Desktop: shift canvas right to create space for hero text on the left */
-    @media (min-width: 768px) {
-      #hero-canvas {
-        left: 62%;
-      }
+    /* ══════════════════════════════════════════════════════════
+       ABOUT — SCROLL ANIMATION (canvas inside circle)
+       350vh scroll container, sticky at 100vh, canvas clips to circle
+    ══════════════════════════════════════════════════════════ */
+    #about-scroll {
+      height: 350vh;
+      position: relative;
     }
 
-    /* Hero text overlay: visible at start, fades on scroll — JS drives opacity */
+    #about-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: var(--surface-1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 var(--pad-x);
+    }
+
+    /* Canvas sits inside the gem-frame circle — clipped by border-radius + overflow:hidden */
+    #anim-canvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      /* Canvas is 900×672 — taller setting ensures ring fills the circle */
+      height: 100%;
+      width: auto;
+      min-width: 100%;
+    }
+
+    /* Loading ring inside the circle */
+    #anim-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-2);
+      transition: opacity 0.6s ease;
+      z-index: 2;
+    }
+    #anim-loading.is-hidden { opacity: 0; pointer-events: none; }
+
+    /* Hero text — static, always fully visible */
     .hero-text {
       position: absolute;
       z-index: 10;
-      pointer-events: none;
-      /* No CSS transition — RAF loop updates directly for scroll-sync */
     }
 
-    /* Desktop: text on left side — vertically centered, clear of canvas which is right-shifted */
+    /* Desktop: centered left column */
     @media (min-width: 768px) {
       .hero-text {
         left: var(--pad-x);
         top: 50%;
         transform: translateY(-50%);
-        bottom: unset;
-        max-width: 44%;
+        max-width: 480px;
       }
     }
-    /* Mobile: text at bottom center */
+    /* Mobile: bottom center */
     @media (max-width: 767px) {
       .hero-text {
         left: var(--pad-x);
@@ -780,7 +801,8 @@
     /* ══════════════════════════════════════════════════════════
        ABOUT / STORY
     ══════════════════════════════════════════════════════════ */
-    .about { background: var(--surface-1); }
+    /* .about background now comes from #about-sticky */
+    .about { background: transparent; padding: 0; }
     .about-inner {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -797,18 +819,14 @@
     .about__gem-frame {
       aspect-ratio: 1;
       max-width: 480px;
+      width: 100%;
       border-radius: 50%;
-      background: radial-gradient(ellipse at 40% 35%,
-        rgba(40, 85, 204, 0.25) 0%,
-        rgba(20, 40, 120, 0.12) 40%,
-        rgba(7, 9, 26, 0.80) 70%
-      );
+      background: var(--surface-1);
       border: 1px solid var(--bd-s);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       position: relative;
-      overflow: hidden;
+      overflow: hidden; /* clips canvas to circle */
+      box-shadow: 0 0 80px rgba(74, 120, 240, 0.18),
+                  0 0 0 1px var(--bd-s);
     }
     .about__gem-frame::before {
       content: '';
@@ -1104,20 +1122,12 @@
 
         <!-- Background layers -->
         <div class="hero-bg" aria-hidden="true">
-          <div class="hero-bg__radial" id="hero-glow"></div>
+          <div class="hero-bg__radial"></div>
           <div class="hero-bg__bottom"></div>
           <div class="hero-bg__lines"></div>
         </div>
 
-        <!-- Frame animation canvas (900×672 internal resolution) -->
-        <canvas
-          id="hero-canvas"
-          width="900"
-          height="672"
-          aria-label="Schmuck-Animation"
-        ></canvas>
-
-        <!-- Hero text (visible at scroll 0, fades as scroll begins) -->
+        <!-- Hero text — static, always visible -->
         <div class="hero-text" id="hero-text">
           <span class="overline">Meisterjuwelier · Wiesbaden</span>
           <h1 class="display-hero hero-title" style="margin: 0 0 22px;">
@@ -1135,20 +1145,9 @@
         </div>
 
         <!-- Scroll indicator -->
-        <div class="scroll-hint" id="scroll-hint" aria-hidden="true">
+        <div class="scroll-hint" aria-hidden="true">
           <div class="scroll-hint__line"></div>
           <span class="scroll-hint__label">Scrollen</span>
-        </div>
-
-        <!-- End CTA: fades in when animation completes -->
-        <div id="hero-end-cta" aria-hidden="true">
-          <span class="overline" style="margin-bottom: 18px;">Entdecken Sie die Kollektion</span>
-          <a href="#kollektion" class="btn btn--primary" style="pointer-events:all;">Jetzt entdecken</a>
-        </div>
-
-        <!-- Loading indicator -->
-        <div id="hero-loading" aria-hidden="true">
-          <div class="loading-ring"></div>
         </div>
 
       </div>
@@ -1341,49 +1340,54 @@
     </section>
 
     <!-- ═══════════════════════════════════════
-         ABOUT / STORY
+         ABOUT — SCROLL ANIMATION IN CIRCLE
+         350vh scroll container, canvas frame player
+         clips to circle via overflow:hidden on gem-frame
     ══════════════════════════════════════════ -->
-    <section class="section about" id="about" aria-labelledby="about-heading">
-      <div class="section__inner">
-        <div class="about-inner">
+    <section id="about-scroll" aria-labelledby="about-heading">
+      <div id="about-sticky">
+        <div class="section__inner" style="width:100%;">
+          <div class="about-inner">
 
-          <div class="about__visual reveal">
-            <div class="about__gem-frame" aria-hidden="true">
-              <svg class="about__gem-icon" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="0.6" aria-hidden="true">
-                <polygon points="40,6 60,20 60,52 40,74 20,52 20,20"/>
-                <polyline points="20,20 40,32 60,20"/>
-                <line x1="40" y1="32" x2="40" y2="74"/>
-                <line x1="20" y1="20" x2="29" y2="10"/>
-                <line x1="60" y1="20" x2="51" y2="10"/>
-                <line x1="40" y1="6" x2="40" y2="32"/>
-                <line x1="29" y1="10" x2="40" y2="6"/>
-                <line x1="51" y1="10" x2="40" y2="6"/>
-                <line x1="20" y1="20" x2="40" y2="74"/>
-                <line x1="60" y1="20" x2="40" y2="74"/>
-              </svg>
+            <!-- LEFT: circular frame with scroll animation -->
+            <div class="about__visual">
+              <div class="about__gem-frame">
+                <!-- Animation canvas — clipped to circle by overflow:hidden on parent -->
+                <canvas
+                  id="anim-canvas"
+                  width="900"
+                  height="672"
+                  aria-label="Schmuck-Animation"
+                ></canvas>
+                <!-- Loading spinner inside circle -->
+                <div id="anim-loading" aria-hidden="true">
+                  <div class="loading-ring"></div>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div class="about__content">
-            <span class="overline reveal">Über uns</span>
-            <h2 class="display-section reveal reveal--delay-1" id="about-heading">
-              Juwelier<br><em>in Wiesbaden</em>
-            </h2>
-            <div class="gold-rule reveal reveal--delay-1"></div>
-            <p class="reveal reveal--delay-2">
-              Seit Jahrzehnten steht Achim Weidmann in Wiesbaden für Schmuck, der bewegt. In unserem Atelier entstehen Stücke, die nicht nur tragen werden – sondern vererbt, erinnert und geliebt.
-            </p>
-            <blockquote class="about__quote reveal reveal--delay-2">
-              „Schmuck ist mehr als Materialwert. Er ist Ausdruck von Persönlichkeit, Liebe und unvergesslichen Momenten."
-            </blockquote>
-            <p class="reveal reveal--delay-3">
-              Unser Anspruch ist es, Ihnen höchste handwerkliche Qualität und eine persönliche, herzliche Beratung zu bieten – ganz gleich, ob Sie ein Einzelstück suchen oder einen Wunsch verwirklichen möchten.
-            </p>
-            <a href="#kontakt" class="btn btn--outline-sapphire reveal reveal--delay-3">
-              Termin vereinbaren
-            </a>
-          </div>
+            <!-- RIGHT: text content -->
+            <div class="about__content" id="about">
+              <span class="overline reveal">Über uns</span>
+              <h2 class="display-section reveal reveal--delay-1" id="about-heading">
+                Juwelier<br><em>in Wiesbaden</em>
+              </h2>
+              <div class="gold-rule reveal reveal--delay-1"></div>
+              <p class="reveal reveal--delay-2">
+                Seit Jahrzehnten steht Achim Weidmann in Wiesbaden für Schmuck, der bewegt. In unserem Atelier entstehen Stücke, die nicht nur tragen werden – sondern vererbt, erinnert und geliebt.
+              </p>
+              <blockquote class="about__quote reveal reveal--delay-2">
+                „Schmuck ist mehr als Materialwert. Er ist Ausdruck von Persönlichkeit, Liebe und unvergesslichen Momenten."
+              </blockquote>
+              <p class="reveal reveal--delay-3">
+                Unser Anspruch ist es, Ihnen höchste handwerkliche Qualität und eine persönliche, herzliche Beratung zu bieten – ganz gleich, ob Sie ein Einzelstück suchen oder einen Wunsch verwirklichen möchten.
+              </p>
+              <a href="#kontakt" class="btn btn--outline-sapphire reveal reveal--delay-3">
+                Termin vereinbaren
+              </a>
+            </div>
 
+          </div>
         </div>
       </div>
     </section>
@@ -1536,43 +1540,36 @@
           Canvas frame player, 50 WebP frames
     ═══════════════════════════════════════ */
     (function initScrollAnimation() {
-      const FRAME_COUNT  = 50;
-      const canvas       = document.getElementById('hero-canvas');
-      const ctx          = canvas.getContext('2d');
-      // Internal resolution matches extracted frames
+      const FRAME_COUNT   = 50;
+      const canvas        = document.getElementById('anim-canvas');
+      if (!canvas) return;
+      const ctx           = canvas.getContext('2d');
       canvas.width  = 900;
       canvas.height = 672;
 
-      const heroScroll   = document.getElementById('hero-scroll');
-      const heroText     = document.getElementById('hero-text');
-      const scrollHint   = document.getElementById('scroll-hint');
-      const heroEndCta   = document.getElementById('hero-end-cta');
-      const heroGlow     = document.getElementById('hero-glow');
-      const heroLoading  = document.getElementById('hero-loading');
+      // Scroll container: the about section drives progress
+      const aboutScroll   = document.getElementById('about-scroll');
+      const animLoading   = document.getElementById('anim-loading');
+      const gemFrame      = canvas.parentElement; // .about__gem-frame
 
       // ── Preload all 50 frames ──
-      let loadedCount = 0;
       let firstFrameLoaded = false;
 
       const frames = Array.from({ length: FRAME_COUNT }, (_, i) => {
         const img = new Image();
         img.onload = function() {
-          loadedCount++;
-          // Show canvas and hide loader once first frame arrives
           if (!firstFrameLoaded) {
             firstFrameLoaded = true;
             drawFrame(0);
-            heroLoading.classList.add('is-hidden');
+            if (animLoading) animLoading.classList.add('is-hidden');
           }
         };
-        img.onerror = function() {
-          console.warn('Frame failed to load:', img.src);
-        };
+        img.onerror = function() { console.warn('Frame failed:', img.src); };
         img.src = 'frames-web/frame-' + String(i + 1).padStart(3, '0') + '.webp';
         return img;
       });
 
-      // ── Draw a single frame onto canvas ──
+      // ── Draw a frame ──
       function drawFrame(index) {
         const clamped = Math.min(Math.max(Math.round(index), 0), FRAME_COUNT - 1);
         const img = frames[clamped];
@@ -1581,50 +1578,23 @@
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       }
 
-      // ── Scroll progress (0 → 1) ──
+      // ── Scroll progress: 0 when about section enters, 1 when it exits ──
       function getProgress() {
-        const rect  = heroScroll.getBoundingClientRect();
-        const total = heroScroll.offsetHeight - window.innerHeight;
+        if (!aboutScroll) return 0;
+        const rect  = aboutScroll.getBoundingClientRect();
+        const total = aboutScroll.offsetHeight - window.innerHeight;
         const scrolled = -rect.top;
         return Math.min(Math.max(scrolled / total, 0), 1);
       }
 
-      // ── Update hero overlay elements based on progress ──
-      function updateOverlay(p) {
-        // Hero text: full opacity at 0%, fades from 10% → 28%
-        const textOpacity = p < 0.10 ? 1 : p < 0.28 ? 1 - (p - 0.10) / 0.18 : 0;
-        heroText.style.opacity = textOpacity;
-
-        // Scroll hint: visible at start, fades at 15%
-        const hintOpacity = p < 0.06 ? 1 : p < 0.15 ? 1 - (p - 0.06) / 0.09 : 0;
-        scrollHint.style.opacity = hintOpacity;
-
-        // End CTA: fades in from 82% → 95%
-        const ctaOpacity = p > 0.82 ? Math.min((p - 0.82) / 0.13, 1) : 0;
-        heroEndCta.style.opacity  = ctaOpacity;
-        heroEndCta.style.transform = 'translateX(-50%) translateY(' + ((1 - ctaOpacity) * 16) + 'px)';
-        if (ctaOpacity > 0.05) {
-          heroEndCta.classList.add('is-visible');
-          heroEndCta.setAttribute('aria-hidden', 'false');
-        } else {
-          heroEndCta.classList.remove('is-visible');
-          heroEndCta.setAttribute('aria-hidden', 'true');
-        }
-
-        // Background glow: subtle intensity shift
-        // BACKGROUND EFFECT — color shifts from low to high saturation as animation plays
-        if (heroGlow) {
-          const intensity = 0.12 + p * 0.28;
-          heroGlow.style.opacity = intensity;
-        }
-
-        // Canvas drop-shadow glow: intensifies mid-animation
-        const glowMid = Math.sin(p * Math.PI); // peaks at 50%
-        const glowA = (0.25 + glowMid * 0.20).toFixed(2);
-        const glowB = (0.12 + glowMid * 0.15).toFixed(2);
-        canvas.style.filter =
-          'drop-shadow(0 0 50px rgba(74,120,240,' + glowA + ')) ' +
-          'drop-shadow(0 0 120px rgba(74,120,240,' + glowB + '))';
+      // ── Update glow based on progress (BACKGROUND EFFECT) ──
+      function updateGlow(p) {
+        if (!gemFrame) return;
+        const glowMid = Math.sin(p * Math.PI); // peaks at 50% of scroll
+        const a = (0.18 + glowMid * 0.28).toFixed(2);
+        gemFrame.style.boxShadow =
+          '0 0 ' + Math.round(60 + glowMid * 80) + 'px rgba(74,120,240,' + a + '),' +
+          '0 0 0 1px rgba(74,120,240,0.18)';
       }
 
       // ── RAF scroll handler ──
@@ -1639,19 +1609,14 @@
           const p = getProgress();
           if (Math.abs(p - lastProgress) < 0.001 && p !== 0 && p !== 1) return;
           lastProgress = p;
-
-          // Map progress to frame index
-          const frameIndex = Math.round(p * (FRAME_COUNT - 1));
-          drawFrame(frameIndex);
-          updateOverlay(p);
+          drawFrame(Math.round(p * (FRAME_COUNT - 1)));
+          updateGlow(p);
         });
       }
 
       window.addEventListener('scroll', onScroll, { passive: true });
-
-      // Initial draw on DOM ready
       drawFrame(0);
-      updateOverlay(0);
+      updateGlow(0);
     })();
 
     /* ══════════════════════════════════════
