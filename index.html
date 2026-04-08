@@ -866,6 +866,49 @@
       gap: clamp(48px, 7vw, 100px);
       align-items: start;
     }
+
+    /* ── Map embed ── */
+    .map-wrapper {
+      margin-top: clamp(56px, 8vw, 90px);
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--bd-s);
+      box-shadow: 0 0 80px rgba(40, 85, 204, 0.12), var(--glow-sm);
+    }
+    .map-wrapper iframe {
+      display: block;
+      width: 100%;
+      height: clamp(280px, 42vw, 480px);
+      border: none;
+      filter: invert(90%) hue-rotate(180deg) saturate(0.85) brightness(0.88);
+    }
+    .map-wrapper__label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 14px 20px;
+      background: linear-gradient(to top, rgba(5,8,16,0.92) 0%, transparent 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .map-wrapper__label span {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text2);
+    }
+    .map-wrapper__label a {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--s300);
+      transition: color 0.25s;
+    }
+    .map-wrapper__label a:hover { color: var(--s200); }
+    }
     @media (max-width: 768px) {
       .contact-grid { grid-template-columns: 1fr; gap: 48px; }
     }
@@ -1466,6 +1509,25 @@
           </div>
 
         </div>
+
+        <!-- Google Maps Embed -->
+        <div class="map-wrapper reveal">
+          <iframe
+            src="https://maps.google.com/maps?q=Juwelier+Achim+Weidmann+Wiesbaden&output=embed&hl=de"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Standort Achim Weidmann Juwelier Wiesbaden"
+            aria-label="Google Maps Karte — Achim Weidmann Juwelier Wiesbaden"
+          ></iframe>
+          <div class="map-wrapper__label">
+            <span>Achim Weidmann · Wiesbaden</span>
+            <a href="https://maps.google.com/?q=Juwelier+Achim+Weidmann+Wiesbaden" target="_blank" rel="noopener noreferrer">
+              In Google Maps öffnen ↗
+            </a>
+          </div>
+        </div>
+
       </div>
     </section>
 
