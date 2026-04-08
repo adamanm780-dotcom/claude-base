@@ -712,60 +712,59 @@
     }
 
     /* ══════════════════════════════════════════════════════════
-       ABOUT / STORY
+       ABOUT / STORY — scroll animation in circle
+       350vh scroll container, sticky viewport, canvas clipped to circle
     ══════════════════════════════════════════════════════════ */
-    .about { background: var(--surface-1); }
+    #about-scroll {
+      height: 350vh;
+      position: relative;
+    }
+    #about-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: var(--surface-1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 var(--pad-x);
+    }
+
     .about-inner {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: clamp(48px, 7vw, 100px);
       align-items: center;
+      max-width: var(--max-w);
+      width: 100%;
+      margin: 0 auto;
     }
     @media (max-width: 768px) {
       .about-inner { grid-template-columns: 1fr; gap: 48px; }
     }
 
-    .about__visual {
-      position: relative;
-    }
+    .about__visual { position: relative; }
+
     .about__gem-frame {
       aspect-ratio: 1;
       max-width: 480px;
+      width: 100%;
       border-radius: 50%;
-      background: radial-gradient(ellipse at 40% 35%,
-        rgba(40, 85, 204, 0.25) 0%,
-        rgba(20, 40, 120, 0.12) 40%,
-        rgba(7, 9, 26, 0.80) 70%
-      );
+      background: var(--surface-2);
       border: 1px solid var(--bd-s);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 0 60px rgba(74, 120, 240, 0.15);
     }
-    .about__gem-frame::before {
-      content: '';
+
+    /* Canvas inside circle — portrait 600×802, width fills circle, height clips */
+    #anim-canvas {
       position: absolute;
-      inset: 20px;
-      border-radius: 50%;
-      border: 1px solid var(--bd-s);
-    }
-    .about__gem-frame::after {
-      content: '';
-      position: absolute;
-      top: 10%; left: 10%;
-      right: 10%; bottom: 10%;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at 30% 30%,
-        rgba(147, 197, 253, 0.08), transparent 60%);
-    }
-    .about__gem-icon {
-      width: 120px; height: 120px;
-      color: var(--s400);
-      opacity: 0.6;
-      position: relative;
-      z-index: 1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: auto;
     }
 
     .about__content .overline   { margin-bottom: 16px; }
@@ -1256,45 +1255,35 @@
     </section>
 
     <!-- ═══════════════════════════════════════
-         ABOUT / STORY
+         ABOUT — scroll animation in circle (0318(5).mov)
+         350vh scroll container, canvas frame player
     ══════════════════════════════════════════ -->
-    <section class="section about" id="about" aria-labelledby="about-heading">
-      <div class="section__inner">
+    <section id="about-scroll" aria-labelledby="about-heading">
+      <div id="about-sticky">
         <div class="about-inner">
 
-          <div class="about__visual reveal">
-            <div class="about__gem-frame" aria-hidden="true">
-              <svg class="about__gem-icon" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="0.6" aria-hidden="true">
-                <polygon points="40,6 60,20 60,52 40,74 20,52 20,20"/>
-                <polyline points="20,20 40,32 60,20"/>
-                <line x1="40" y1="32" x2="40" y2="74"/>
-                <line x1="20" y1="20" x2="29" y2="10"/>
-                <line x1="60" y1="20" x2="51" y2="10"/>
-                <line x1="40" y1="6" x2="40" y2="32"/>
-                <line x1="29" y1="10" x2="40" y2="6"/>
-                <line x1="51" y1="10" x2="40" y2="6"/>
-                <line x1="20" y1="20" x2="40" y2="74"/>
-                <line x1="60" y1="20" x2="40" y2="74"/>
-              </svg>
+          <div class="about__visual">
+            <div class="about__gem-frame">
+              <canvas id="anim-canvas" width="600" height="802" aria-label="Schmuck-Animation"></canvas>
             </div>
           </div>
 
-          <div class="about__content">
-            <span class="overline reveal">Über uns</span>
-            <h2 class="display-section reveal reveal--delay-1" id="about-heading">
+          <div class="about__content" id="about">
+            <span class="overline">Über uns</span>
+            <h2 class="display-section" id="about-heading">
               Juwelier<br><em>in Wiesbaden</em>
             </h2>
-            <div class="gold-rule reveal reveal--delay-1"></div>
-            <p class="reveal reveal--delay-2">
+            <div class="gold-rule"></div>
+            <p>
               Seit Jahrzehnten steht Achim Weidmann in Wiesbaden für Schmuck, der bewegt. In unserem Atelier entstehen Stücke, die nicht nur tragen werden – sondern vererbt, erinnert und geliebt.
             </p>
-            <blockquote class="about__quote reveal reveal--delay-2">
+            <blockquote class="about__quote">
               „Schmuck ist mehr als Materialwert. Er ist Ausdruck von Persönlichkeit, Liebe und unvergesslichen Momenten."
             </blockquote>
-            <p class="reveal reveal--delay-3">
+            <p>
               Unser Anspruch ist es, Ihnen höchste handwerkliche Qualität und eine persönliche, herzliche Beratung zu bieten – ganz gleich, ob Sie ein Einzelstück suchen oder einen Wunsch verwirklichen möchten.
             </p>
-            <a href="#kontakt" class="btn btn--outline-sapphire reveal reveal--delay-3">
+            <a href="#kontakt" class="btn btn--outline-sapphire">
               Termin vereinbaren
             </a>
           </div>
@@ -1447,7 +1436,68 @@
     })();
 
     /* ══════════════════════════════════════
-       2. REVEAL ANIMATIONS — IntersectionObserver
+       2. SCROLL ANIMATION — 50 WebP frames from 0318(5).mov
+          Canvas inside about circle, scroll-driven
+    ═══════════════════════════════════════ */
+    (function initScrollAnimation() {
+      var FRAME_COUNT = 50;
+      var canvas = document.getElementById('anim-canvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      canvas.width = 600;
+      canvas.height = 802;
+
+      var scrollEl = document.getElementById('about-scroll');
+      var gemFrame = canvas.parentElement;
+
+      // Preload all 50 frames
+      var frames = [];
+      var firstLoaded = false;
+      for (var i = 0; i < FRAME_COUNT; i++) {
+        (function(idx) {
+          var img = new Image();
+          img.onload = function() {
+            if (!firstLoaded) { firstLoaded = true; draw(0); }
+          };
+          img.src = 'frames-web/frame-' + String(idx + 1).padStart(3, '0') + '.webp';
+          frames.push(img);
+        })(i);
+      }
+
+      function draw(index) {
+        var n = Math.min(Math.max(Math.round(index), 0), FRAME_COUNT - 1);
+        var img = frames[n];
+        if (!img || !img.complete || !img.naturalWidth) return;
+        ctx.clearRect(0, 0, 600, 802);
+        ctx.drawImage(img, 0, 0, 600, 802);
+      }
+
+      function progress() {
+        var r = scrollEl.getBoundingClientRect();
+        var total = scrollEl.offsetHeight - window.innerHeight;
+        return Math.min(Math.max(-r.top / total, 0), 1);
+      }
+
+      var raf = false;
+      window.addEventListener('scroll', function() {
+        if (raf) return;
+        raf = true;
+        requestAnimationFrame(function() {
+          raf = false;
+          var p = progress();
+          draw(Math.round(p * (FRAME_COUNT - 1)));
+          // Glow pulses mid-scroll
+          var g = Math.sin(p * Math.PI);
+          gemFrame.style.boxShadow =
+            '0 0 ' + Math.round(60 + g * 80) + 'px rgba(74,120,240,' + (0.15 + g * 0.25).toFixed(2) + ')';
+        });
+      }, { passive: true });
+
+      draw(0);
+    })();
+
+    /* ══════════════════════════════════════
+       3. REVEAL ANIMATIONS — IntersectionObserver
     ═══════════════════════════════════════ */
     (function initReveal() {
       const els = document.querySelectorAll('.reveal');
