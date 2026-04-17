@@ -376,8 +376,24 @@ section{padding:140px 0;position:relative}
   display:grid;grid-template-columns:1.05fr 1fr;gap:90px;align-items:center;
 }
 @media (max-width:900px){.editorial-grid{grid-template-columns:1fr;gap:50px}}
-.editorial-media{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:var(--r-md)}
-.editorial-media img{width:100%;height:100%;object-fit:cover}
+.editorial-media-wrap{
+  perspective:1200px;
+  position:relative;
+}
+.editorial-media{
+  position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:var(--r-md);
+  transform-style:preserve-3d;
+  transition:transform .25s cubic-bezier(.2,.8,.2,1);
+  will-change:transform;
+}
+.editorial-media img{
+  width:100%;height:100%;object-fit:cover;
+  transform-style:preserve-3d;
+  transition:transform .25s cubic-bezier(.2,.8,.2,1);
+  will-change:transform;
+}
+.editorial-media-wrap.is-tilting .editorial-media{transition:transform .05s linear}
+.editorial-media-wrap.is-tilting .editorial-media img{transition:transform .05s linear}
 .editorial-media::before{
   content:"";position:absolute;inset:20px;
   border:1px solid rgba(201,169,106,.35);
@@ -732,8 +748,10 @@ section{padding:140px 0;position:relative}
 <section class="editorial" id="heritage">
   <div class="container">
     <div class="editorial-grid">
-      <div class="editorial-media reveal">
-        <img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=1000&q=80" alt="Juweliermeister an der Werkbank" />
+      <div class="editorial-media-wrap reveal" data-tilt>
+        <div class="editorial-media">
+          <img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=1000&q=80" alt="Juweliermeister an der Werkbank" />
+        </div>
       </div>
 
       <div class="editorial-text reveal delay-1">
@@ -920,6 +938,50 @@ window.addEventListener('scroll',()=>{
   if(window.scrollY>20) header.style.boxShadow='0 20px 40px -20px rgba(0,0,0,.6)';
   else header.style.boxShadow='none';
 });
+
+// 3D-Tilt auf Editorial-Bild (Mausbewegung → perspektivische Rotation + Float)
+(function(){
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tilts = document.querySelectorAll('[data-tilt]');
+  if (prefersReduced || !tilts.length) return;
+
+  const MAX_ROTATE = 10;   // Grad maximal Kippung
+  const FLOAT_Z    = 40;   // Bild schwebt px nach vorne
+
+  tilts.forEach((wrap)=>{
+    const card = wrap.querySelector('.editorial-media');
+    const img  = wrap.querySelector('img');
+    if (!card) return;
+
+    let rafId = null;
+    let pendingX = 0, pendingY = 0;
+
+    const apply = ()=>{
+      card.style.transform = `rotateY(${pendingX}deg) rotateX(${pendingY}deg)`;
+      if (img) img.style.transform = `translateZ(${FLOAT_Z}px)`;
+      rafId = null;
+    };
+
+    wrap.addEventListener('mouseenter', ()=>{
+      wrap.classList.add('is-tilting');
+    });
+
+    wrap.addEventListener('mousemove', (e)=>{
+      const r = wrap.getBoundingClientRect();
+      const dx = (e.clientX - r.left - r.width/2)  / (r.width/2);   // -1..1
+      const dy = (e.clientY - r.top  - r.height/2) / (r.height/2);  // -1..1
+      pendingX = dx * MAX_ROTATE;
+      pendingY = -dy * MAX_ROTATE;
+      if (!rafId) rafId = requestAnimationFrame(apply);
+    });
+
+    wrap.addEventListener('mouseleave', ()=>{
+      wrap.classList.remove('is-tilting');
+      card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+      if (img) img.style.transform = 'translateZ(0)';
+    });
+  });
+})();
 </script>
 </body>
 </html>
