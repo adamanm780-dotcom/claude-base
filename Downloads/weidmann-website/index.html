@@ -180,9 +180,9 @@ section{padding:140px 0;position:relative}
 .hero-overlay-bar{
   position:absolute;left:0;right:0;bottom:0;z-index:4;
   padding:26px 40px;
-  display:flex;justify-content:space-between;align-items:center;
+  display:flex;justify-content:flex-end;align-items:center;
   gap:30px;flex-wrap:wrap;
-  background:linear-gradient(180deg, transparent, rgba(5,13,9,.7));
+  background:linear-gradient(180deg, transparent, rgba(5,13,9,.6));
 }
 .hero-overlay-bar .tags{
   display:flex;gap:30px;flex-wrap:wrap;
@@ -190,7 +190,23 @@ section{padding:140px 0;position:relative}
 }
 .hero-overlay-bar .tags span{display:inline-flex;align-items:center;gap:10px}
 .hero-overlay-bar .tags span::before{content:"◆";color:var(--gold);font-size:8px}
-.hero-overlay-bar .actions{display:flex;gap:14px;flex-wrap:wrap}
+.hero-overlay-bar .actions{display:none}
+
+/* Hero CTA positioned over the baked-in "DISCOVER COLLECTION" area */
+.hero-cta{
+  position:absolute;z-index:5;
+  left:6.5%;
+  top:63%;
+  display:flex;gap:14px;flex-wrap:wrap;align-items:center;
+}
+@media (max-width:900px){
+  .hero-cta{left:5%;top:62%;gap:10px}
+  .hero-cta .btn{padding:12px 20px;font-size:10px;letter-spacing:.28em}
+}
+@media (max-width:600px){
+  .hero-cta{left:5%;top:60%}
+  .hero-cta .btn{padding:10px 16px;font-size:9px;letter-spacing:.22em;gap:8px}
+}
 @media (max-width:760px){
   .hero-overlay-bar{padding:18px 20px;justify-content:center;text-align:center}
   .hero-overlay-bar .tags{display:none}
@@ -538,16 +554,17 @@ section{padding:140px 0;position:relative}
   <div class="hero-image-full">
     <img src="fischmann.png" alt="Juwelier Weidmann – Timeless Elegance · Smaragd-Collier und passende Schmuckstücke" />
 
+    <div class="hero-cta">
+      <a href="#halsketten" class="btn btn-primary">Kollektion entdecken</a>
+      <a href="#visit" class="btn btn-ghost">Private Beratung</a>
+    </div>
+
     <div class="hero-overlay-bar">
       <div class="tags">
         <span>Farbsteine</span>
         <span>Diamanten</span>
         <span>Perlen</span>
         <span>Goldschmuck</span>
-      </div>
-      <div class="actions">
-        <a href="#halsketten" class="btn btn-primary">Kollektion entdecken</a>
-        <a href="#visit" class="btn btn-ghost">Private Beratung</a>
       </div>
     </div>
   </div>
