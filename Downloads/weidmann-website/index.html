@@ -43,6 +43,10 @@ button{font:inherit;border:none;background:none;cursor:pointer;color:inherit}
   --line:rgba(201,169,106,.22);
   --line-soft:rgba(233,223,201,.12);
   --shadow-lg:0 40px 80px -30px rgba(0,0,0,.7);
+  --r-sm:6px;
+  --r-md:12px;
+  --r-lg:18px;
+  --r-xl:24px;
 }
 
 /* ============ TYPOGRAPHY ============ */
@@ -128,6 +132,7 @@ section{padding:140px 0;position:relative}
   display:grid;place-items:center;
   border:1px solid var(--line);
   transition:all .35s ease;
+  background:transparent;
 }
 .icon-btn:hover{border-color:var(--gold);color:var(--gold)}
 .icon-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.4}
@@ -155,6 +160,7 @@ section{padding:140px 0;position:relative}
   display:block;
   background:#050d09;
   overflow:hidden;
+  border-radius:var(--r-md);
 }
 .hero-image-full img{
   width:100%;
@@ -172,6 +178,7 @@ section{padding:140px 0;position:relative}
   content:"";position:absolute;inset:18px;z-index:3;
   border:1px solid rgba(201,169,106,.28);
   pointer-events:none;
+  border-radius:var(--r-sm);
 }
 @media (max-width:900px){
   .hero-image-full::after{inset:10px}
@@ -224,6 +231,7 @@ section{padding:140px 0;position:relative}
   padding:16px 34px;font-size:11px;letter-spacing:.35em;text-transform:uppercase;
   font-weight:500;position:relative;overflow:hidden;
   transition:all .4s ease;
+  border-radius:var(--r-sm);
 }
 .btn-primary{
   color:var(--emerald-950);
@@ -246,6 +254,14 @@ section{padding:140px 0;position:relative}
 .btn-ghost:hover{border-color:var(--gold);color:var(--ivory);background:rgba(201,169,106,.06)}
 
 /* ============ KATEGORIEN ============ */
+.kollektionen{
+  background:
+    linear-gradient(180deg, rgba(7,17,12,.94), rgba(11,25,18,.92)),
+    url('marmor1.png');
+  background-size:cover;
+  background-position:top center;
+  border-bottom:1px solid var(--line);
+}
 .section-head{text-align:center;max-width:680px;margin:0 auto 80px}
 .section-head h2{font-size:clamp(2.4rem,4.6vw,4rem);margin:18px 0 20px;font-weight:300;letter-spacing:.02em}
 .section-head p{color:var(--muted);font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic}
@@ -259,13 +275,14 @@ section{padding:140px 0;position:relative}
 @media (max-width:520px){.kollektion-grid{grid-template-columns:1fr}}
 
 .kollektion-card{
-  position:relative;overflow:hidden;border-radius:2px;
+  position:relative;overflow:hidden;border-radius:var(--r-md);
   aspect-ratio:3/4;
   background:var(--emerald-800);
   border:1px solid var(--line-soft);
-  transition:transform .6s cubic-bezier(.2,.8,.2,1), border-color .4s;
+  transition:transform .6s cubic-bezier(.2,.8,.2,1), border-color .4s, box-shadow .4s;
   cursor:pointer;
 }
+.kollektion-card:hover{box-shadow:0 24px 60px -20px rgba(0,0,0,.6)}
 .kollektion-card:hover{transform:translateY(-6px);border-color:var(--gold)}
 .kollektion-card img{
   width:100%;height:100%;object-fit:cover;
@@ -294,7 +311,10 @@ section{padding:140px 0;position:relative}
 /* ============ NEU EINGETROFFEN ============ */
 .featured{
   background:
-    linear-gradient(180deg, var(--emerald-900) 0%, var(--emerald-950) 100%);
+    linear-gradient(180deg, rgba(11,25,18,.93) 0%, rgba(7,17,12,.96) 100%),
+    url('marmor1.png');
+  background-size:cover;
+  background-position:center bottom;
   border-top:1px solid var(--line);
   border-bottom:1px solid var(--line);
 }
@@ -311,17 +331,20 @@ section{padding:140px 0;position:relative}
   position:relative;
   overflow:hidden;
   transition:all .5s ease;
+  border-radius:var(--r-md);
 }
-.product:hover{border-color:var(--gold);background:linear-gradient(180deg, rgba(26,66,50,.5), rgba(15,37,27,.3))}
+.product:hover{border-color:var(--gold);background:linear-gradient(180deg, rgba(26,66,50,.5), rgba(15,37,27,.3));box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
 .product::before{
   content:"";position:absolute;top:12px;left:12px;right:12px;bottom:12px;
   border:1px solid transparent;pointer-events:none;transition:border-color .5s;
+  border-radius:calc(var(--r-md) - 4px);
 }
 .product:hover::before{border-color:rgba(201,169,106,.2)}
 
 .product-media{
   aspect-ratio:1/1;overflow:hidden;margin-bottom:22px;
   background:var(--emerald-950);position:relative;
+  border-radius:var(--r-sm);
 }
 .product-media img{width:100%;height:100%;object-fit:cover;transition:transform .9s ease}
 .product:hover .product-media img{transform:scale(1.06)}
@@ -330,6 +353,7 @@ section{padding:140px 0;position:relative}
   background:rgba(7,17,12,.85);backdrop-filter:blur(4px);
   padding:6px 12px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;
   color:var(--gold);border:1px solid var(--line);
+  border-radius:999px;
 }
 .product h4{font-size:1.4rem;font-weight:400;margin-bottom:6px}
 .product .category{color:var(--muted);font-size:11px;letter-spacing:.28em;text-transform:uppercase;margin-bottom:14px}
@@ -343,19 +367,25 @@ section{padding:140px 0;position:relative}
 
 /* ============ EDITORIAL / HERITAGE ============ */
 .editorial{
-  background:var(--emerald-950);
+  background:
+    linear-gradient(180deg, rgba(7,17,12,.90), rgba(7,17,12,.94)),
+    url('marmor1.png');
+  background-size:cover;
+  background-position:center;
   position:relative;
+  border-top:1px solid var(--line);
 }
 .editorial-grid{
   display:grid;grid-template-columns:1.05fr 1fr;gap:90px;align-items:center;
 }
 @media (max-width:900px){.editorial-grid{grid-template-columns:1fr;gap:50px}}
-.editorial-media{position:relative;aspect-ratio:4/5;overflow:hidden}
+.editorial-media{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:var(--r-md)}
 .editorial-media img{width:100%;height:100%;object-fit:cover}
 .editorial-media::before{
   content:"";position:absolute;inset:20px;
   border:1px solid rgba(201,169,106,.35);
   pointer-events:none;z-index:2;
+  border-radius:var(--r-sm);
 }
 .editorial-media::after{
   content:"EST. WIESBADEN";position:absolute;bottom:44px;right:-70px;z-index:3;
@@ -395,8 +425,9 @@ section{padding:140px 0;position:relative}
   border:1px solid var(--line);
   backdrop-filter:blur(8px);
   transition:all .5s;
+  border-radius:var(--r-md);
 }
-.stone-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+.stone-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 24px 60px -20px rgba(0,0,0,.5)}
 .stone-card .icon{
   width:60px;height:60px;margin-bottom:28px;
   display:grid;place-items:center;
@@ -409,7 +440,12 @@ section{padding:140px 0;position:relative}
 
 /* ============ VISIT / KONTAKT ============ */
 .visit{
-  background:var(--emerald-900);
+  background:
+    linear-gradient(180deg, rgba(11,25,18,.90), rgba(7,17,12,.94)),
+    url('marmor1.png');
+  background-size:cover;
+  background-position:top center;
+  border-top:1px solid var(--line);
 }
 .visit-inner{
   display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
@@ -434,9 +470,12 @@ section{padding:140px 0;position:relative}
   border:1px solid var(--line);
   padding:60px 50px;
   position:relative;
+  border-radius:var(--r-lg);
+  overflow:hidden;
 }
 .hours-card::before{
   content:"";position:absolute;inset:12px;border:1px solid rgba(201,169,106,.3);pointer-events:none;
+  border-radius:calc(var(--r-lg) - 6px);
 }
 .hours-card h3{font-size:1.8rem;font-weight:300;margin-bottom:28px;text-align:center}
 .hours-card .row{
@@ -490,8 +529,10 @@ section{padding:140px 0;position:relative}
   width:100%;padding:14px 16px;background:rgba(7,17,12,.65);
   border:1px solid var(--line);color:var(--ivory);
   font:inherit;font-size:.9rem;margin-bottom:12px;
+  border-radius:var(--r-sm);
+  transition:border-color .3s ease, background .3s ease;
 }
-.newsletter input:focus{outline:none;border-color:var(--gold)}
+.newsletter input:focus{outline:none;border-color:var(--gold);background:rgba(7,17,12,.85)}
 .newsletter input::placeholder{color:var(--muted)}
 .newsletter .btn{width:100%;justify-content:center}
 
@@ -577,7 +618,7 @@ section{padding:140px 0;position:relative}
 </section>
 
 <!-- ============ KOLLEKTIONEN ============ -->
-<section id="halsketten">
+<section id="halsketten" class="kollektionen">
   <div class="container">
     <div class="section-head reveal">
       <span class="gold-line">Unsere Kollektionen</span>
