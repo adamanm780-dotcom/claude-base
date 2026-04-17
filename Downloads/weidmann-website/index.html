@@ -199,12 +199,15 @@ section{padding:140px 0;position:relative}
 .hero-overlay-bar .tags span::before{content:"◆";color:var(--gold);font-size:8px}
 .hero-overlay-bar .actions{display:flex;gap:14px;flex-wrap:wrap}
 
-/* Invisible clickable hotspot over the baked-in DISCOVER COLLECTION box */
+/* Invisible clickable hotspot locked to the baked-in DISCOVER COLLECTION
+   text. Positioned as a percentage of .hero-image-full, which scales
+   proportionally with the image (width:100%, height:auto), so the
+   hotspot stays glued to the text at every viewport size. */
 .hero-discover-hotspot{
   position:absolute;z-index:5;
-  left:6.5%;
-  top:56%;
-  width:22%;
+  left:14.5%;
+  top:60.8%;
+  width:20%;
   height:10%;
   cursor:pointer;
   border-radius:2px;
@@ -213,12 +216,6 @@ section{padding:140px 0;position:relative}
 .hero-discover-hotspot:hover{
   background:rgba(201,169,106,.14);
   box-shadow:0 0 0 1px rgba(201,169,106,.35), 0 10px 30px -10px rgba(201,169,106,.35);
-}
-@media (max-width:900px){
-  .hero-discover-hotspot{left:5.5%;top:55%;width:26%;height:11%}
-}
-@media (max-width:600px){
-  .hero-discover-hotspot{left:5%;top:54%;width:32%;height:11%}
 }
 @media (max-width:760px){
   .hero-overlay-bar{padding:18px 20px;justify-content:center;text-align:center}
