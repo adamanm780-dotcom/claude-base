@@ -142,7 +142,6 @@
     if (matchMedia('(max-width:600px)').matches) heroVideo.poster = 'images/hero_mobile_nb.png';
     const play = () => heroVideo.play?.().catch(() => {});
     heroVideo.muted = true;
-    heroVideo.playbackRate = 0.85;   // subtle slow-motion = instant cinema
     play();
     addEventListener('click', play, { once: true });
   }

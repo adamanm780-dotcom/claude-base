@@ -613,24 +613,6 @@ html.loading,html.loading body{overflow:hidden;height:100%}
    ============================================================
    ============================================================ */
 
-/* ---------- HERO: film grade + light leak over the video ---------- */
-.hero-video{filter:saturate(1.14) contrast(1.06) brightness(1.02)}
-.hero-grade{position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:
-    radial-gradient(120% 95% at 70% 42%, transparent 42%, rgba(16,30,9,.34) 100%),
-    linear-gradient(115deg, rgba(159,25,77,.10) 0%, transparent 42%, rgba(47,70,29,.16) 96%);
-  mix-blend-mode:multiply}
-.hero-leak{position:absolute;inset:-12%;z-index:2;pointer-events:none;
-  mix-blend-mode:screen;opacity:0;will-change:transform,opacity;
-  background:linear-gradient(78deg,transparent 40%,
-    rgba(255,214,140,.34) 49%,rgba(255,172,199,.20) 54%,transparent 64%);
-  animation:leak 11s ease-in-out infinite 3s}
-@keyframes leak{
-  0%,52%{transform:translateX(-55%) skewX(-6deg);opacity:0}
-  60%{opacity:.85}
-  74%{opacity:.5}
-  88%,100%{transform:translateX(55%) skewX(-6deg);opacity:0}}
-
 /* ---------- HERO: staged intro choreography ---------- */
 .hero .hl{display:block;overflow:hidden;padding-bottom:.10em;margin-bottom:-.10em}
 .hero .hl i{display:inline-block;font-style:normal}
@@ -707,7 +689,7 @@ html.hero-in .swoosh path{animation:swooshDraw 1s cubic-bezier(.6,0,.3,1) 1.15s 
 .scard:hover{box-shadow:0 26px 60px rgba(47,70,29,.18)}
 
 @media(prefers-reduced-motion:reduce){
-  .hero-leak,.hero h1 .berry,.btn-green::after{animation:none!important}
+  .hero h1 .berry,.btn-green::after{animation:none!important}
   html.loading .hero .hl i{transform:none}
   html.loading .hero-kicker,html.loading .hero .lead,html.loading .hero-actions,
   html.loading .hero-badges,html.loading .scroll-cue{opacity:1}
