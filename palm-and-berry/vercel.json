@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/images/:path*",
-      "destination": "https://palm-and-berry-b7nrc6h87-adamanm780-dotcoms-projects.vercel.app/images/:path*"
+      "source": "/:path*",
+      "destination": "https://cdn.jsdelivr.net/gh/adamanm780-dotcom/claude-base@930719b7cfa46e80362e93786a1c64e0a1d97af0/palm-and-berry/:path*"
     }
   ]
 }
