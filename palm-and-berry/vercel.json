@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/images/:path*",
+      "destination": "https://palm-and-berry-b7nrc6h87-adamanm780-dotcoms-projects.vercel.app/images/:path*"
+    }
+  ]
+}

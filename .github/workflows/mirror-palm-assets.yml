@@ -1,0 +1,54 @@
+name: Mirror Palm & Berry assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - claude/palm-berry-vercel-mcp-gbt1xj
+    paths:
+      - '.github/workflows/mirror-palm-assets.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/palm-berry-vercel-mcp-gbt1xj
+
+      - name: Download assets from live site
+        run: |
+          set -u
+          BASE="https://palm-and-berry.vercel.app/images"
+          DEST="palm-and-berry/images"
+          mkdir -p "$DEST"
+          FILES="leaf_monstera_t.png leaf_palm_t.png bamboo_grow.webp bamboo_grown.png bamboo_slim.png logo.png \
+                 hero_nb.png hero_mobile_nb.png hero.mp4 hero_mobile.mp4 \
+                 cluster_a_t.png cluster_b_t.png \
+                 fav_matcha_glow.png fav_acai_berry.png fav_iced_matcha_latte.png fav_extra_toppings.png \
+                 sig_tropical_matcha.png sig_berry_paradise.png sig_nutty_coco.png \
+                 top_pistazie.webp top_lotus.webp top_nutella.webp top_erdnuss.webp top_weisse.webp top_kondens.webp top_bueno.webp \
+                 ig_1.png ig_2.png ig_3.png ig_4.png cafe_interior.png"
+          MISSING=""
+          for f in $FILES; do
+            if curl -fsSL --retry 3 -o "$DEST/$f" "$BASE/$f"; then
+              echo "OK   $f ($(stat -c%s "$DEST/$f") bytes)"
+            else
+              MISSING="$MISSING $f"
+              echo "MISS $f"
+            fi
+          done
+          echo "missing:$MISSING"
+          ls -la "$DEST"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add palm-and-berry/images
+          git diff --cached --quiet && echo "nothing to commit" && exit 0
+          git commit -m "Mirror palm-and-berry image/video assets from live site [skip ci]"
+          git push origin claude/palm-berry-vercel-mcp-gbt1xj
