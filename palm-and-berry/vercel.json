@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/:path*",
-      "destination": "https://cdn.jsdelivr.net/gh/adamanm780-dotcom/claude-base@9c05fdb6d0b43bc47c93685a6e1ce873d8f846a9/palm-and-berry/:path*"
+      "destination": "https://cdn.jsdelivr.net/gh/adamanm780-dotcom/claude-base@b9ee1bd81a93d16181bf2b26578249268743edde/palm-and-berry/:path*"
     }
   ]
 }
