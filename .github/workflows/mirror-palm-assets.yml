@@ -42,6 +42,10 @@ jobs:
             fi
           done
           echo "missing:$MISSING"
+          # AI-generated hero video (Kling 3.0 Turbo via Higgsfield)
+          curl -fsSL --retry 3 -o "$DEST/hero_v2.mp4" \
+            "https://d8j0ntlcm91z4.cloudfront.net/user_3EfaPD3NJ6lU9EMsrAcoIvwpUMX/hf_20260712_094624_7ae96180-e363-4001-8b75-080773725432.mp4" \
+            && echo "OK hero_v2.mp4 ($(stat -c%s "$DEST/hero_v2.mp4") bytes)" || echo "MISS hero_v2.mp4"
           ls -la "$DEST"
 
       - name: Commit and push
